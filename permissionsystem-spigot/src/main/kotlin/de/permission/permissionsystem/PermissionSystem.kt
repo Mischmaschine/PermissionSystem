@@ -7,7 +7,7 @@ import permission.PermissionInitializer
 class PermissionSystem : JavaPlugin() {
 
     override fun onEnable() {
-        val permissionInitializer = PermissionInitializer()
+        val permissionInitializer = PermissionInitializer(this.dataFolder.absolutePath)
         EventRegistrationService(this, permissionInitializer.permissionPlayerManager)
 
     }

@@ -1,25 +1,34 @@
 package permission
 
+import com.google.gson.GsonBuilder
 import de.mischmaschine.database.database.Configuration
 import de.mischmaschine.database.mongodb.AbstractMongoDB
 import permission.data.DatabaseConfiguration
-import permission.data.mongodb.MongoDB
 import permission.data.mongodb.PermissionPlayerMongoDB
 import permission.player.manager.PermissionPlayerManager
+import java.io.File
 
-class PermissionInitializer {
+class PermissionInitializer(absolutePath: String) {
 
     val permissionPlayerManager: PermissionPlayerManager
 
     init {
-        val databaseConfiguration = DatabaseConfiguration(
+        var databaseConfiguration = DatabaseConfiguration(
             "mongodb",
             "permissionPlayer",
-            "179.61.251.243",
+            "127.0.0.1",
             27017,
-            "mongoAdmin",
-            "llxNAslfGR0NxHPFkzRfrioz8XlfEO6bOUHVxuu26R0G8OJkOc"
+            "username",
+            "password"
         )
+        val child =
+            File(File(absolutePath).also { it.mkdirs() }, "databaseCredentials.json").also { it.createNewFile() }
+        val gson = GsonBuilder().setPrettyPrinting().serializeNulls().create()
+        if (child.readText().isEmpty()) {
+            child.writeText(gson.toJson(databaseConfiguration))
+        } else {
+            databaseConfiguration = gson.fromJson(child.readText(), DatabaseConfiguration::class.java)
+        }
         Configuration(
             databaseConfiguration.host,
             databaseConfiguration.port,
