@@ -16,6 +16,11 @@ interface PermissionEntity {
         return getPermissions().firstOrNull { it.permissionName == name }
     }
 
+    fun setPermission(permission: Permission) {
+        clearPermissions()
+        addPermission(permission)
+    }
+
     /**
      * Adds the given permission to this entity.
      */
@@ -26,6 +31,12 @@ interface PermissionEntity {
      */
     fun removePermission(permission: Permission)
 
+    /**
+     * Removes the given permission from this entity.
+     */
+    fun removePermission(permissionName: String) {
+        removePermission(getPermissionByName(permissionName) ?: return)
+    }
 
     /**
      * Returns true if the given permission is granted to this entity.

@@ -2,7 +2,6 @@ package permission
 
 class Permission(
     val permissionName: String,
-    val permissionDescription: String,
     val timeout: Long
 ) {
 

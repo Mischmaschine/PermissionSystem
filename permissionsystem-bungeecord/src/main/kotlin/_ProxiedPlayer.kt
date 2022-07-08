@@ -3,6 +3,10 @@ import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager
 import java.util.concurrent.CompletableFuture
 
-fun ProxiedPlayer.getPermissionPlayer(permissionPlayerManager: PermissionPlayerManager): CompletableFuture<PermissionPlayer?> {
-    return permissionPlayerManager.getPermissionPlayer(this.uniqueId)
+fun ProxiedPlayer.getPermissionPlayer(): CompletableFuture<PermissionPlayer?> {
+    return PermissionPlayerManager.instance.getPermissionPlayer(this.uniqueId)
+}
+
+fun ProxiedPlayer.getCachedPermissionPlayer(): PermissionPlayer? {
+    return PermissionPlayerManager.instance.getCachedPermissionPlayer(this.uniqueId)
 }
