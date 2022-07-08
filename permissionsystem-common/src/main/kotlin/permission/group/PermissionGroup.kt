@@ -42,5 +42,4 @@ class PermissionGroup(
     fun getSuffix(): String = suffix
 
     fun getDisplayName(): String = displayName
-
 }
