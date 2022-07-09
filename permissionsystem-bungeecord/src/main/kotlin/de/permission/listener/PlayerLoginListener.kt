@@ -29,7 +29,7 @@ class PlayerLoginListener(
             PermissionPlayer(
                 player.uniqueId,
                 mutableSetOf(),
-                emptyList()
+                mutableSetOf(),
             )
         )
         event.completeIntent(permissionSystem)

@@ -1,15 +1,13 @@
-package permission.data.mongodb
+package permission.data.mongodb.player
 
-import com.google.gson.Gson
 import org.bson.Document
-import permission.data.IPermissionPlayerData
+import permission.data.playerdata.IPermissionPlayerData
+import permission.data.mongodb.MongoDB
 import permission.player.PermissionPlayer
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
-internal class PermissionPlayerMongoDB : IPermissionPlayerData {
-
-    private val mongoDB = MongoDB()
+internal class PermissionPlayerMongoDB(private val mongoDB: MongoDB) : IPermissionPlayerData {
 
     override fun getPermissionPlayerData(uuid: UUID): CompletableFuture<PermissionPlayer?> {
         return CompletableFuture.supplyAsync {
@@ -39,7 +37,6 @@ internal class PermissionPlayerMongoDB : IPermissionPlayerData {
     companion object {
         const val PERMISSION_PLAYER_COLLECTION = "permissionPlayer"
         const val PERMISSION_PLAYER_DATA = "permissionPlayerData"
-        val gson: Gson = com.google.gson.GsonBuilder().setPrettyPrinting().serializeNulls().create()
     }
 }
 

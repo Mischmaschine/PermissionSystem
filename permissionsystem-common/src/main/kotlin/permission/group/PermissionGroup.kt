@@ -1,31 +1,29 @@
 package permission.group
 
 import permission.Permission
-import permission.player.PermissionEntity
 
 class PermissionGroup(
     private val name: String,
     private val permissions: MutableSet<Permission>,
     private val inheritances: MutableSet<PermissionGroup>,
-    private val priority: Int,
-    private val prefix: String,
-    private val suffix: String,
-    private val displayName: String = prefix + name + suffix
-) : PermissionEntity {
+    private val priority: Int
+) : IPermissionGroup {
 
-    fun addInheritance(group: PermissionGroup) {
+    override fun addInheritance(group: PermissionGroup) {
         inheritances.add(group)
     }
 
-    fun removeInheritance(group: PermissionGroup) {
+    override fun removeInheritance(group: PermissionGroup) {
         inheritances.remove(group)
     }
 
-    fun getInheritances(): Set<PermissionGroup> = inheritances
+    override fun getAllInheritances(): Collection<PermissionGroup> {
+        return inheritances
+    }
 
-    override fun getPermissions(): MutableSet<Permission> {
+    override fun getPermissions(): MutableCollection<Permission> {
         val permissions = this.permissions
-        getInheritances().forEach {
+        getAllInheritances().forEach {
             permissions.addAll(it.getPermissions())
         }
         return permissions
@@ -41,11 +39,5 @@ class PermissionGroup(
 
     fun getName(): String = name
 
-    fun getPriority(): Int = priority
-
-    fun getPrefix(): String = prefix
-
-    fun getSuffix(): String = suffix
-
-    fun getDisplayName(): String = displayName
+    override fun getPriority(): Int = priority
 }

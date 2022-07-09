@@ -8,14 +8,18 @@ import de.mischmaschine.database.sql.local.sqlite.AbstractSQLite
 import de.mischmaschine.database.sql.network.mariadb.AbstractMariaDB
 import de.mischmaschine.database.sql.network.mysql.AbstractMySQL
 import permission.data.DatabaseConfiguration
-import permission.data.mongodb.PermissionPlayerMongoDB
-import permission.data.sql.PermissionPlayerMySQL
+import permission.data.mongodb.MongoDB
+import permission.data.mongodb.group.PermissionGroupDataMongoDB
+import permission.data.mongodb.player.PermissionPlayerMongoDB
+import permission.data.sql.player.PermissionPlayerMySQL
+import permission.group.manager.PermissionGroupManager
 import permission.player.manager.PermissionPlayerManager
 import java.io.File
 
 class PermissionInitializer(absolutePath: String) {
 
     val permissionPlayerManager: PermissionPlayerManager
+    val permissionGroupManager: PermissionGroupManager
 
     init {
         var databaseConfiguration = DatabaseConfiguration(
@@ -50,12 +54,23 @@ class PermissionInitializer(absolutePath: String) {
                 )
             }
         )
+        val mongoDB = MongoDB()
+
         this.permissionPlayerManager =
             PermissionPlayerManager(
                 if (databaseConfiguration.databaseType == "mongodb") {
-                    PermissionPlayerMongoDB()
+                    PermissionPlayerMongoDB(mongoDB)
                 } else PermissionPlayerMySQL()
             )
         PermissionPlayerManager.instance = permissionPlayerManager
+
+        this.permissionGroupManager =
+            PermissionGroupManager(
+                if (databaseConfiguration.databaseType == "mongodb") {
+                    PermissionGroupDataMongoDB(mongoDB)
+                } else PermissionGroupDataMongoDB(mongoDB)
+            )
+        PermissionGroupManager.instance = permissionGroupManager
+
     }
 }

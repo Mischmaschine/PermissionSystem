@@ -10,6 +10,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.plugin.Command
 import net.md_5.bungee.api.plugin.TabExecutor
 import permission.Permission
+import permission.group.PermissionGroup
+import permission.group.PermissionInfoGroup
+import permission.group.manager.PermissionGroupManager
 import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager
 import permission.update
@@ -59,6 +62,8 @@ class PermissionCommand(
                     println(permissionPlayer)
                     permissionPlayer?.let {
                         it.addPermission(Permission(args[2], System.currentTimeMillis() + args[3].toLong()))
+                        it.addPermissionInfoGroup(PermissionInfoGroup("test", System.currentTimeMillis() + args[3].toLong()))
+                        PermissionGroupManager.instance.createPermissionGroup(PermissionGroup("test", mutableSetOf(Permission("Test", System.currentTimeMillis() + 342834843)), mutableSetOf(), 0))
                         it.update()
                         sendCustomData(player, it)
                         sender.sendMessage(TextComponent("§aPermission added successfully §l§8| §a${args[2]}§l§8: §a${args[3]}"))

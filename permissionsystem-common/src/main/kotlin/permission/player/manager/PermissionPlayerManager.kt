@@ -1,6 +1,6 @@
 package permission.player.manager
 
-import permission.data.IPermissionPlayerData
+import permission.data.playerdata.IPermissionPlayerData
 import permission.player.PermissionPlayer
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -43,8 +43,6 @@ class PermissionPlayerManager(private val permissionPlayerData: IPermissionPlaye
     }
 
     companion object {
-        @Deprecated("Don't use a singleton of this class!!")
         lateinit var instance: PermissionPlayerManager
     }
-
 }

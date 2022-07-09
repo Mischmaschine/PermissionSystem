@@ -7,7 +7,7 @@ interface PermissionEntity {
     /**
      * Returns all permissions of this entity.
      */
-    fun getPermissions(): MutableSet<Permission>
+    fun getPermissions(): MutableCollection<Permission>
 
     /**
      * Returns the permission from the given name.

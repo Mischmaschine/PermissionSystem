@@ -1,7 +1,8 @@
-package permission.data.sql
+package permission.data.sql.player
 
 import com.google.gson.Gson
-import permission.data.IPermissionPlayerData
+import permission.data.playerdata.IPermissionPlayerData
+import permission.data.sql.MySQL
 import permission.player.PermissionPlayer
 import java.sql.SQLException
 import java.util.*
