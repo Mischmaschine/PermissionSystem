@@ -13,7 +13,7 @@ class EventRegistrationService(
 
     init {
 
-        registerListeners(PlayerLoginListener(permissionSystem, permissionPlayerManager))
+        registerListeners(PlayerLoginListener())
 
     }
 

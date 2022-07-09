@@ -1,17 +1,23 @@
 package de.permission.command
 
-import getCachedPermissionPlayer
+import com.google.gson.GsonBuilder
+import de.permission.permissionsystem.PermissionSystem
 import getPermissionPlayer
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.chat.TextComponent
+import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.plugin.Command
 import net.md_5.bungee.api.plugin.TabExecutor
 import permission.Permission
 import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager
+import permission.update
 
-class PermissionCommand(private val permissionPlayerManager: PermissionPlayerManager) : Command("permission"),
+class PermissionCommand(
+    private val permissionSystem: PermissionSystem,
+    private val permissionPlayerManager: PermissionPlayerManager
+) : Command("permission", "permissionsystem.commands.*", "perms"),
     TabExecutor {
 
     /**
@@ -21,16 +27,26 @@ class PermissionCommand(private val permissionPlayerManager: PermissionPlayerMan
         when (args[0]) {
             "remove" -> {
                 if (args.size == 3) {
+                    val proxiedPlayer = ProxyServer.getInstance().getPlayer(args[1])
                     val permissionPlayer = ProxyServer.getInstance().getPlayer(args[1]).getPermissionPlayer()
-                    permissionPlayer.get()?.removePermission(args[2])
+                    permissionPlayer.get()?.let {
+                        it.removePermission(args[2])
+                        it.update()
+                        sendCustomData(proxiedPlayer, it)
+                    }
                     return
                 }
                 sender.sendMessage(TextComponent("§c/permission remove <permission>"))
             }
             "set" -> {
-                if (args.size >= 3) {
-                    val permissionPlayer = ProxyServer.getInstance().getPlayer(args[1]).getPermissionPlayer()
-                    permissionPlayer.get()?.setPermission(Permission(args[2], args[3].toLong()))
+                if (args.size == 4) {
+                    val proxiedPlayer = ProxyServer.getInstance().getPlayer(args[1])
+                    val permissionPlayer = proxiedPlayer.getPermissionPlayer()
+                    permissionPlayer.get()?.let {
+                        it.setPermission(Permission(args[2], System.currentTimeMillis() + args[3].toLong()))
+                        it.update()
+                        sendCustomData(proxiedPlayer, it)
+                    }
                     return
                 }
                 sender.sendMessage(TextComponent("§c/permission set <permission>"))
@@ -42,22 +58,28 @@ class PermissionCommand(private val permissionPlayerManager: PermissionPlayerMan
                     val permissionPlayer = player.getPermissionPlayer().get()
                     println(permissionPlayer)
                     permissionPlayer?.let {
-                        it.addPermission(Permission(args[2], args[3].toLong()))
-                        permissionPlayerManager.setPermissionPlayer(it)
+                        it.addPermission(Permission(args[2], System.currentTimeMillis() + args[3].toLong()))
+                        it.update()
+                        sendCustomData(player, it)
                         sender.sendMessage(TextComponent("§aPermission added successfully §l§8| §a${args[2]}§l§8: §a${args[3]}"))
                     }
-                        return
+                    return
                 }
                 sender.sendMessage(TextComponent("§c/permission add <permission>"))
 
             }
             "clear" -> {
                 if (args.size == 2) {
-                    val permissionPlayer = ProxyServer.getInstance().getPlayer(args[1]).getPermissionPlayer()
-                    permissionPlayer.get()?.clearPermissions()
+                    val player = ProxyServer.getInstance().getPlayer(args[1])
+                    val permissionPlayer = player.getPermissionPlayer()
+                    permissionPlayer.get()?.let {
+                        it.clearPermissions()
+                        it.update()
+                        sendCustomData(player, it)
+                    }
                     return
                 }
-                sender.sendMessage(TextComponent("§c/permission clear"))
+                sender.sendMessage(TextComponent("§c/permission clear <Name>"))
 
             }
             "info" -> {
@@ -71,6 +93,9 @@ class PermissionCommand(private val permissionPlayerManager: PermissionPlayerMan
                 sender.sendMessage(TextComponent("§c/permission info"))
 
             }
+            else -> {
+                sender.sendMessage(TextComponent("§c/permission <remove|set|add|clear|info>"))
+            }
         }
     }
 
@@ -80,6 +105,17 @@ class PermissionCommand(private val permissionPlayerManager: PermissionPlayerMan
             2 -> ProxyServer.getInstance().players.map { it.name }.filter { it.startsWith(args[0]) }
             else -> emptyList()
         }
+    }
+
+    private fun sendCustomData(proxiedPlayer: ProxiedPlayer, permissionPlayerInstance: PermissionPlayer) {
+        permissionSystem.sendCustomData(
+            proxiedPlayer,
+            gson.toJson(permissionPlayerInstance)
+        )
+    }
+
+    companion object {
+        private val gson = GsonBuilder().serializeNulls().create()
     }
 
 }

@@ -12,8 +12,12 @@ interface IPermissionPlayerData {
     fun getPermissionPlayerData(uuid: UUID): CompletableFuture<PermissionPlayer?>
 
     /**
+     * Updates the [PermissionPlayer] associated with this data.
+     */
+    fun updatePermissionPlayerData(permissionPlayer: PermissionPlayer)
+
+    /**
      * Sets the [PermissionPlayer] associated with this data.
      */
     fun setPermissionPlayerData(permissionPlayer: PermissionPlayer)
-
 }

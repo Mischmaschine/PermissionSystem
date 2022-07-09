@@ -8,14 +8,12 @@ class Permission(
     /**
      * @return true if the permission is still valid, false otherwise
      */
-    fun isExpired(): Boolean {
-        return System.currentTimeMillis() > timeout
-    }
+    fun isExpired(): Boolean = System.currentTimeMillis() > timeout
+
+    fun isNotExpired(): Boolean = !isExpired()
 
     /**
      * @return the remaining time in milliseconds from the time the permission was granted
      */
-    fun getRemainingTime(): Long {
-        return timeout - System.currentTimeMillis()
-    }
+    fun getRemainingTime(): Long = timeout - System.currentTimeMillis()
 }

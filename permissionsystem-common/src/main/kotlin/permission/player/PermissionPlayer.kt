@@ -1,6 +1,7 @@
 package permission.player
 
 import permission.Permission
+import permission.group.PermissionGroup
 import java.util.*
 
 /**
@@ -12,10 +13,14 @@ import java.util.*
 class PermissionPlayer(
     val uuid: UUID,
     private val permissions: MutableSet<Permission>,
-    val groups: List<String>,
+    val groups: List<PermissionGroup>,
 ) : PermissionEntity {
 
-    override fun getPermissions(): Set<Permission> {
+    override fun getPermissions(): MutableSet<Permission> {
+        val permissions = this.permissions
+        groups.forEach {
+            permissions.addAll(it.getPermissions())
+        }
         return permissions
     }
 

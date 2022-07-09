@@ -20,9 +20,18 @@ class PermissionPlayerManager(private val permissionPlayerData: IPermissionPlaye
         }
     }
 
-    fun setPermissionPlayer(permissionPlayer: PermissionPlayer) {
-        this.permissionPlayers[permissionPlayer.uuid] = permissionPlayer
+    fun createPermissionPlayer(permissionPlayer: PermissionPlayer) {
+        updatePermissionPlayerCache(permissionPlayer)
         permissionPlayerData.setPermissionPlayerData(permissionPlayer)
+    }
+
+    fun updatePermissionPlayer(permissionPlayer: PermissionPlayer) {
+        updatePermissionPlayerCache(permissionPlayer)
+        permissionPlayerData.updatePermissionPlayerData(permissionPlayer)
+    }
+
+    fun updatePermissionPlayerCache(permissionPlayer: PermissionPlayer) {
+        this.permissionPlayers[permissionPlayer.uuid] = permissionPlayer
     }
 
     fun getCachedPermissionPlayer(uuid: UUID): PermissionPlayer? {

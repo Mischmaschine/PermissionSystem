@@ -7,7 +7,9 @@ import java.sql.SQLException
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
-internal class PermissionPlayerMySQL(private val mySQL: MySQL) : IPermissionPlayerData {
+internal class PermissionPlayerMySQL : IPermissionPlayerData {
+
+    private val mySQL = MySQL()
 
     override fun getPermissionPlayerData(uuid: UUID): CompletableFuture<PermissionPlayer?> {
         return CompletableFuture.supplyAsync {
@@ -21,6 +23,13 @@ internal class PermissionPlayerMySQL(private val mySQL: MySQL) : IPermissionPlay
             }
             return@supplyAsync null
         }
+    }
+
+    override fun updatePermissionPlayerData(permissionPlayer: PermissionPlayer) {
+        mySQL.updateAsync(
+            PERMISSION_PLAYER_TABLE,
+            "uuid", permissionPlayer.uuid.toString(), "data", gson.toJson(permissionPlayer)
+        )
     }
 
     override fun setPermissionPlayerData(permissionPlayer: PermissionPlayer) {

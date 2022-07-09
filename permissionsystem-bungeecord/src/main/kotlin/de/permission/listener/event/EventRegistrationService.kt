@@ -14,15 +14,18 @@ class EventRegistrationService(
 ) {
 
     init {
-        registerListeners(PermissionCheckListener(), PlayerLoginListener(permissionPlayerManager))
-        registerCommands(PermissionCommand(permissionPlayerManager))
+        registerListeners(
+            PermissionCheckListener(),
+            PlayerLoginListener(permissionSystem, permissionPlayerManager)
+        )
+        registerCommands(PermissionCommand(permissionSystem, permissionPlayerManager))
     }
 
-    fun registerListeners(vararg listener: Listener) {
+    private fun registerListeners(vararg listener: Listener) {
         listener.forEach { permissionSystem.proxy.pluginManager.registerListener(permissionSystem, it) }
     }
 
-    fun registerCommands(vararg command: Command) {
+    private fun registerCommands(vararg command: Command) {
         command.forEach { permissionSystem.proxy.pluginManager.registerCommand(permissionSystem, it) }
     }
 }

@@ -20,14 +20,20 @@ internal class PermissionPlayerMongoDB : IPermissionPlayerData {
         }
     }
 
-    override fun setPermissionPlayerData(permissionPlayer: PermissionPlayer) {
-        println("Inserting to database...")
-        mongoDB.insertDocumentSync(
+    override fun updatePermissionPlayerData(permissionPlayer: PermissionPlayer) {
+        mongoDB.updateDocumentAsync(
             PERMISSION_PLAYER_COLLECTION,
             permissionPlayer.uuid.toString(),
             Document(PERMISSION_PLAYER_DATA, gson.toJson(permissionPlayer))
         )
-        println("Finished!")
+    }
+
+    override fun setPermissionPlayerData(permissionPlayer: PermissionPlayer) {
+        mongoDB.insertDocumentAsync(
+            PERMISSION_PLAYER_COLLECTION,
+            permissionPlayer.uuid.toString(),
+            Document(PERMISSION_PLAYER_DATA, gson.toJson(permissionPlayer))
+        )
     }
 
     companion object {
@@ -35,6 +41,5 @@ internal class PermissionPlayerMongoDB : IPermissionPlayerData {
         const val PERMISSION_PLAYER_DATA = "permissionPlayerData"
         val gson: Gson = com.google.gson.GsonBuilder().setPrettyPrinting().serializeNulls().create()
     }
-
 }
 

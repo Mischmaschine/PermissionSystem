@@ -7,15 +7,21 @@ interface PermissionEntity {
     /**
      * Returns all permissions of this entity.
      */
-    fun getPermissions(): Set<Permission>
+    fun getPermissions(): MutableSet<Permission>
 
     /**
      * Returns the permission from the given name.
      */
-    fun getPermissionByName(name: String): Permission? {
-        return getPermissions().firstOrNull { it.permissionName == name }
-    }
+    fun getPermissionByName(name: String): Permission? = getAllNotExpiredPermissions().find { it.permissionName == name }
 
+    /**
+     * Returns all permissions of this entity which are not expired.
+     */
+    fun getAllNotExpiredPermissions(): Collection<Permission> = getPermissions().filter { !it.isExpired() }
+
+    /**
+     * Sets the permission to the given value.
+     */
     fun setPermission(permission: Permission) {
         clearPermissions()
         addPermission(permission)
@@ -41,15 +47,16 @@ interface PermissionEntity {
     /**
      * Returns true if the given permission is granted to this entity.
      */
-    fun hasPermission(permission: String): Boolean {
-        return getPermissionByName(permission) != null
-    }
+    fun hasPermission(permission: String): Boolean =
+        getPermissionByName(permission)?.isNotExpired() ?: hasAllPermissions()
+
+    /**
+     * Returns true if the entity has the * permission.
+     */
+    fun hasAllPermissions(): Boolean = getPermissions().any { it.permissionName == "*" }
 
     /**
      * Clears all permissions from this entity.
      */
-    fun clearPermissions() {
-        getPermissions().forEach { removePermission(it) }
-    }
-
+    fun clearPermissions() = getPermissions().clear()
 }

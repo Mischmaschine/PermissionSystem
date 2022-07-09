@@ -23,7 +23,13 @@ class PermissionGroup(
 
     fun getInheritances(): Set<PermissionGroup> = inheritances
 
-    override fun getPermissions(): Set<Permission> = permissions
+    override fun getPermissions(): MutableSet<Permission> {
+        val permissions = this.permissions
+        getInheritances().forEach {
+            permissions.addAll(it.getPermissions())
+        }
+        return permissions
+    }
 
     override fun addPermission(permission: Permission) {
         this.permissions.add(permission)

@@ -1,24 +1,22 @@
 package de.permission.listener
 
-import de.permission.permissionsystem.PermissionSystem
-import getPermissionPlayer
+import de.permission.PermissibleBaseSurrogate
+import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerLoginEvent
-import permission.player.manager.PermissionPlayerManager
 
-class PlayerLoginListener(
-    private val permissionSystem: PermissionSystem,
-    private val permissionPlayerManager: PermissionPlayerManager
-) : Listener {
+class PlayerLoginListener : Listener {
 
-    @EventHandler
-    fun onJoin(event: PlayerLoginEvent) {
+    @EventHandler(priority = EventPriority.LOWEST)
+    fun onLogin(event: PlayerLoginEvent) {
         val player = event.player
-        player.getPermissionPlayer(permissionPlayerManager).get()?.let { permissionPlayer ->
-            permissionPlayer.getPermissions().forEach {
-                player.addAttachment(permissionSystem, it.permissionName, true)
-            }
-        }
+        val version = Bukkit.getServer().javaClass.`package`.name.split(".")[3]
+        Class.forName("org.bukkit.craftbukkit.$version.entity.CraftHumanEntity")?.let {
+            val field = it.getDeclaredField("perm")
+            field.isAccessible = true
+            field[player] = PermissibleBaseSurrogate(player)
+        } ?: println("Failed to set perm field")
     }
 }

@@ -6,3 +6,7 @@ import java.util.concurrent.CompletableFuture
 fun Player.getPermissionPlayer(): CompletableFuture<PermissionPlayer?> {
     return PermissionPlayerManager.instance.getPermissionPlayer(this.uniqueId)
 }
+
+fun Player.getCachedPermissionPlayer(): PermissionPlayer? {
+    return PermissionPlayerManager.instance.getCachedPermissionPlayer(this.uniqueId)
+}
