@@ -1,6 +1,7 @@
 package permission.data.sql.player
 
-import com.google.gson.Gson
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import permission.data.playerdata.IPermissionPlayerData
 import permission.data.sql.MySQL
 import permission.player.PermissionPlayer
@@ -19,30 +20,29 @@ internal class PermissionPlayerMySQL : IPermissionPlayerData {
                     ?: throw SQLException(
                         "No result found"
                     )
-            if (resultSet.next()) {
-                return@supplyAsync gson.fromJson(resultSet.getString("data"), PermissionPlayer::class.java)
+            return@supplyAsync if(resultSet.next()) {
+                json.decodeFromString(resultSet.getString("data"))
+            } else {
+                null
             }
-            return@supplyAsync null
         }
     }
 
     override fun updatePermissionPlayerData(permissionPlayer: PermissionPlayer) {
         mySQL.updateAsync(
             PERMISSION_PLAYER_TABLE,
-            "uuid", permissionPlayer.uuid.toString(), "data", gson.toJson(permissionPlayer)
+            "uuid", permissionPlayer.uuid.toString(), "data", json.encodeToString(permissionPlayer)
         )
     }
 
     override fun setPermissionPlayerData(permissionPlayer: PermissionPlayer) {
         mySQL.insertAsync(
             PERMISSION_PLAYER_TABLE,
-            listOf(permissionPlayer.uuid.toString(), gson.toJson(permissionPlayer)),
+            listOf(permissionPlayer.uuid.toString(), json.encodeToString(permissionPlayer)),
         )
     }
 
     companion object {
         const val PERMISSION_PLAYER_TABLE = "permission_player"
-        val gson: Gson = com.google.gson.GsonBuilder().setPrettyPrinting().serializeNulls().create()
     }
-
 }

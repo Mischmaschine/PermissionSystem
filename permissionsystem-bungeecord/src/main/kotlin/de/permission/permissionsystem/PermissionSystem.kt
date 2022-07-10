@@ -12,23 +12,24 @@ class PermissionSystem : Plugin() {
 
     override fun onEnable() {
         val permissionInitializer = PermissionInitializer(this.dataFolder.absolutePath)
-        EventRegistrationService(this, permissionInitializer.permissionPlayerManager)
+        EventRegistrationService(
+            this,
+            permissionInitializer.permissionPlayerManager,
+            permissionInitializer.permissionGroupManager
+        )
         proxy.registerChannel("player:permsUpdate")
     }
 
     fun sendCustomData(player: ProxiedPlayer, permissionJson: String) {
         val networkPlayers = ProxyServer.getInstance().players
-        // perform a check to see if globally are no players
-        if (networkPlayers == null || networkPlayers.isEmpty()) {
-            return
+        networkPlayers?.let {
+            if (it.isEmpty()) {
+                return
+            }
+            player.server.info.sendData("player:permsUpdate",
+                ByteStreams.newDataOutput().also { dataOutputStream -> dataOutputStream.writeUTF(permissionJson) }
+                    .toByteArray()
+            )
         }
-        val out = ByteStreams.newDataOutput()
-        out.writeUTF(permissionJson)
-
-        // we send the data to the server
-        // using ServerInfo the packet is being queued if there are no players in the server
-        // using only the server to send data the packet will be lost if no players are in it
-        player.server.info.sendData("player:permsUpdate", out.toByteArray())
     }
-
 }

@@ -1,7 +1,6 @@
 package permission.data.playerdata
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import kotlinx.serialization.json.Json
 import permission.player.PermissionPlayer
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -23,6 +22,6 @@ interface IPermissionPlayerData {
      */
     fun setPermissionPlayerData(permissionPlayer: PermissionPlayer)
 
-    val gson: Gson
-        get() = GsonBuilder().setPrettyPrinting().create()
+    val json: Json
+        get() = Json { prettyPrint = true }
 }

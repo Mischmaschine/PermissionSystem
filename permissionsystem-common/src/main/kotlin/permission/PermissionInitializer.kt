@@ -1,12 +1,14 @@
 package permission
 
-import com.google.gson.GsonBuilder
 import de.mischmaschine.database.database.Configuration
 import de.mischmaschine.database.mongodb.AbstractMongoDB
 import de.mischmaschine.database.sql.local.h2.AbstractH2SQL
 import de.mischmaschine.database.sql.local.sqlite.AbstractSQLite
 import de.mischmaschine.database.sql.network.mariadb.AbstractMariaDB
 import de.mischmaschine.database.sql.network.mysql.AbstractMySQL
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import permission.data.DatabaseConfiguration
 import permission.data.mongodb.MongoDB
 import permission.data.mongodb.group.PermissionGroupDataMongoDB
@@ -30,13 +32,13 @@ class PermissionInitializer(absolutePath: String) {
             "username",
             "password"
         )
+        val format = Json { prettyPrint = true }
         val child =
             File(File(absolutePath).also { it.mkdirs() }, "databaseCredentials.json").also { it.createNewFile() }
-        val gson = GsonBuilder().setPrettyPrinting().serializeNulls().create()
         if (child.readText().isEmpty()) {
-            child.writeText(gson.toJson(databaseConfiguration))
+            child.writeText(format.encodeToString(databaseConfiguration))
         } else {
-            databaseConfiguration = gson.fromJson(child.readText(), DatabaseConfiguration::class.java)
+            databaseConfiguration = format.decodeFromString(child.readText())
         }
         Configuration(
             databaseConfiguration.host,

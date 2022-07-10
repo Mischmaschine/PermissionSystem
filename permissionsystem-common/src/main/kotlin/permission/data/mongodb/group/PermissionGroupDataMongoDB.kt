@@ -1,5 +1,7 @@
 package permission.data.mongodb.group
 
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import org.bson.Document
 import permission.data.groupdata.IPermissionGroupData
 import permission.data.mongodb.MongoDB
@@ -10,10 +12,12 @@ class PermissionGroupDataMongoDB(private val mongoDB: MongoDB) : IPermissionGrou
 
     override fun getPermissionGroupData(name: String): CompletableFuture<PermissionGroup?> {
         return CompletableFuture.supplyAsync {
-            return@supplyAsync gson.fromJson(
-                mongoDB.getDocumentSync(PERMISSION_GROUP_COLLECTION, name)
-                    ?.getString(PERMISSION_GROUP_DATA), PermissionGroup::class.java
-            )
+            return@supplyAsync mongoDB.getDocumentSync(PERMISSION_GROUP_COLLECTION, name)
+                ?.getString(PERMISSION_GROUP_DATA)?.let {
+                    json.decodeFromString(
+                        it
+                    )
+                }
         }
     }
 
@@ -21,7 +25,7 @@ class PermissionGroupDataMongoDB(private val mongoDB: MongoDB) : IPermissionGrou
         mongoDB.updateDocumentAsync(
             PERMISSION_GROUP_COLLECTION,
             permissionGroup.getName(),
-            Document(PERMISSION_GROUP_DATA, gson.toJson(permissionGroup))
+            Document(PERMISSION_GROUP_DATA, json.encodeToString(permissionGroup))
         )
     }
 
@@ -29,11 +33,11 @@ class PermissionGroupDataMongoDB(private val mongoDB: MongoDB) : IPermissionGrou
         mongoDB.insertDocumentAsync(
             PERMISSION_GROUP_COLLECTION,
             permissionGroup.getName(),
-            Document(PERMISSION_GROUP_DATA, gson.toJson(permissionGroup))
+            Document(PERMISSION_GROUP_DATA, json.encodeToString(permissionGroup))
         )
     }
 
-    override fun removePermissionGroupData(permissionGroup: PermissionGroup) {
+    override fun deletePermissionGroupData(permissionGroup: PermissionGroup) {
         mongoDB.deleteDocumentAsync(PERMISSION_GROUP_COLLECTION, permissionGroup.getName())
     }
 

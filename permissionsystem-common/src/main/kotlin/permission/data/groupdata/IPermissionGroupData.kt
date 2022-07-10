@@ -1,7 +1,6 @@
 package permission.data.groupdata
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import kotlinx.serialization.json.Json
 import permission.group.PermissionGroup
 import permission.player.PermissionPlayer
 import java.util.concurrent.CompletableFuture
@@ -26,9 +25,11 @@ interface IPermissionGroupData {
     /**
      * Removes the [PermissionPlayer] associated with this data.
      */
-    fun removePermissionGroupData(permissionGroup: PermissionGroup)
+    fun deletePermissionGroupData(permissionGroup: PermissionGroup)
 
-    val gson: Gson
-        get() = GsonBuilder().setPrettyPrinting().create()
-
+    /**
+     * Returns Json serializer.
+     */
+    val json: Json
+        get() = Json { prettyPrint = true }
 }

@@ -1,9 +1,12 @@
 package permission.player
 
+import kotlinx.serialization.Serializable
 import permission.Permission
 import permission.group.PermissionGroup
 import permission.group.PermissionInfoGroup
 import permission.group.manager.PermissionGroupManager
+import permission.serialization.CollectionSerializer
+import permission.serialization.UUIDSerializer
 import java.util.*
 
 /**
@@ -12,13 +15,17 @@ import java.util.*
  * @param permissions The permissions of the player.
  * @param groups The groups of the player.
  */
+@Serializable
 class PermissionPlayer(
+    @Serializable(with = UUIDSerializer::class)
     val uuid: UUID,
-    private val permissions: MutableSet<Permission>,
-    val groups: MutableCollection<PermissionInfoGroup>,
+    @Serializable(with = CollectionSerializer::class)
+    private val permissions: MutableCollection<Permission> = mutableSetOf(),
+    @Serializable(with = CollectionSerializer::class)
+    private val groups: MutableCollection<PermissionInfoGroup> = mutableSetOf(),
 ) : PermissionEntity {
 
-    override fun getPermissions(): MutableSet<Permission> {
+    override fun getPermissions(): MutableCollection<Permission> {
         val permissions = this.permissions
         getAllNotExpiredPermissionGroups().map { it.getPermissions() }.forEach { permissions.addAll(it) }
         return this.permissions
@@ -32,14 +39,26 @@ class PermissionPlayer(
         this.groups.add(group)
     }
 
+    fun removePermissionInfoGroup(groupName: String) {
+        val group = groups.firstOrNull { it.groupName == groupName } ?: return
+        groups.remove(group)
+    }
+
     fun getAllNotExpiredPermissionInfoGroups(): Collection<PermissionInfoGroup> {
         return getPermissionGroups().filter { !it.isExpired() }
     }
 
-    fun getAllNotExpiredPermissionGroups(): Collection<PermissionGroup> =
-        getAllNotExpiredPermissionInfoGroups().mapNotNull {
-            PermissionGroupManager.instance.getPermissionGroup(it.groupName).get()
+    fun getAllNotExpiredPermissionGroups(): Collection<PermissionGroup> {
+        val permissionInfoGroups = getAllNotExpiredPermissionInfoGroups().mapNotNull {
+            val infoGroup = PermissionGroupManager.instance.getPermissionGroup(it.groupName).get()
+            infoGroup?.let { permissionGroup ->
+                removePermissionInfoGroup(permissionGroup.getName())
+            }
+            infoGroup
         }
+        return permissionInfoGroups
+    }
+
 
     override fun addPermission(permission: Permission) {
         this.permissions.add(permission)

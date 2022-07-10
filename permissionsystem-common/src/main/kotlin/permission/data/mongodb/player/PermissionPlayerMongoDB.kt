@@ -1,8 +1,10 @@
 package permission.data.mongodb.player
 
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import org.bson.Document
-import permission.data.playerdata.IPermissionPlayerData
 import permission.data.mongodb.MongoDB
+import permission.data.playerdata.IPermissionPlayerData
 import permission.player.PermissionPlayer
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -11,10 +13,12 @@ internal class PermissionPlayerMongoDB(private val mongoDB: MongoDB) : IPermissi
 
     override fun getPermissionPlayerData(uuid: UUID): CompletableFuture<PermissionPlayer?> {
         return CompletableFuture.supplyAsync {
-            return@supplyAsync gson.fromJson(
-                mongoDB.getDocumentSync(PERMISSION_PLAYER_COLLECTION, uuid.toString())
-                    ?.getString(PERMISSION_PLAYER_DATA), PermissionPlayer::class.java
-            )
+            return@supplyAsync mongoDB.getDocumentSync(PERMISSION_PLAYER_COLLECTION, uuid.toString())
+                ?.getString(PERMISSION_PLAYER_DATA)?.let {
+                    json.decodeFromString(
+                        it
+                    )
+                }
         }
     }
 
@@ -22,7 +26,7 @@ internal class PermissionPlayerMongoDB(private val mongoDB: MongoDB) : IPermissi
         mongoDB.updateDocumentAsync(
             PERMISSION_PLAYER_COLLECTION,
             permissionPlayer.uuid.toString(),
-            Document(PERMISSION_PLAYER_DATA, gson.toJson(permissionPlayer))
+            Document(PERMISSION_PLAYER_DATA, json.encodeToString(permissionPlayer))
         )
     }
 
@@ -30,7 +34,7 @@ internal class PermissionPlayerMongoDB(private val mongoDB: MongoDB) : IPermissi
         mongoDB.insertDocumentAsync(
             PERMISSION_PLAYER_COLLECTION,
             permissionPlayer.uuid.toString(),
-            Document(PERMISSION_PLAYER_DATA, gson.toJson(permissionPlayer))
+            Document(PERMISSION_PLAYER_DATA, json.encodeToString(permissionPlayer))
         )
     }
 

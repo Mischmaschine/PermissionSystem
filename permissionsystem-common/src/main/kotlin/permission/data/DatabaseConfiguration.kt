@@ -1,5 +1,6 @@
 package permission.data
 
+@kotlinx.serialization.Serializable
 internal data class DatabaseConfiguration(
     val databaseType: String,
     val databaseName: String,

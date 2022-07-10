@@ -19,6 +19,11 @@ class PermissionGroupManager(private val permissionGroupData: IPermissionGroupDa
         }
     }
 
+    fun deletePermissionGroup(permissionGroup: PermissionGroup) {
+        this.permissionGroups.remove(permissionGroup.getName())
+        permissionGroupData.deletePermissionGroupData(permissionGroup)
+    }
+
     fun createPermissionGroup(permissionGroup: PermissionGroup) {
         updatePermissionGroupCache(permissionGroup)
         permissionGroupData.setPermissionGroupData(permissionGroup)

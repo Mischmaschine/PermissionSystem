@@ -6,11 +6,13 @@ import de.permission.listener.PlayerLoginListener
 import de.permission.permissionsystem.PermissionSystem
 import net.md_5.bungee.api.plugin.Command
 import net.md_5.bungee.api.plugin.Listener
+import permission.group.manager.PermissionGroupManager
 import permission.player.manager.PermissionPlayerManager
 
 class EventRegistrationService(
     private val permissionSystem: PermissionSystem,
     private val permissionPlayerManager: PermissionPlayerManager,
+    private val permissionGroupManager: PermissionGroupManager,
 ) {
 
     init {
@@ -18,7 +20,7 @@ class EventRegistrationService(
             PermissionCheckListener(),
             PlayerLoginListener(permissionSystem, permissionPlayerManager)
         )
-        registerCommands(PermissionCommand(permissionSystem, permissionPlayerManager))
+        registerCommands(PermissionCommand(permissionSystem, permissionGroupManager))
     }
 
     private fun registerListeners(vararg listener: Listener) {

@@ -1,11 +1,21 @@
 package permission.group
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import permission.Permission
+import permission.serialization.CollectionSerializer
 
-class PermissionGroup(
+@Serializable
+data class PermissionGroup(
+    @SerialName("name")
     private val name: String,
-    private val permissions: MutableSet<Permission>,
-    private val inheritances: MutableSet<PermissionGroup>,
+    @SerialName("permissions")
+    @Serializable(with = CollectionSerializer::class)
+    private val permissions: MutableCollection<Permission> = mutableSetOf(),
+    @SerialName("inheritances")
+    @Serializable(with = CollectionSerializer::class)
+    private val inheritances: MutableCollection<PermissionGroup> = mutableSetOf(),
+    @SerialName("priority")
     private val priority: Int
 ) : IPermissionGroup {
 

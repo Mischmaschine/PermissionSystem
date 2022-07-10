@@ -26,11 +26,7 @@ class PlayerLoginListener(
                 permissionPlayer.update()
             }
         } ?: permissionPlayerManager.createPermissionPlayer(
-            PermissionPlayer(
-                player.uniqueId,
-                mutableSetOf(),
-                mutableSetOf(),
-            )
+            PermissionPlayer(event.connection.uniqueId)
         )
         event.completeIntent(permissionSystem)
 

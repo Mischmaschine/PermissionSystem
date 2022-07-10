@@ -1,8 +1,11 @@
 package permission
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class Permission(
-    val permissionName: String,
-    val timeout: Long
+    val permissionName: String = "",
+    val timeout: Long = 0
 ) {
 
     /**
