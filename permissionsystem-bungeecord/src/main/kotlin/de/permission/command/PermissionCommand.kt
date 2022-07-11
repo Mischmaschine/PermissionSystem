@@ -2,20 +2,17 @@ package de.permission.command
 
 import com.google.gson.GsonBuilder
 import de.permission.permissionsystem.PermissionSystem
-import getPermissionPlayer
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.plugin.Command
 import net.md_5.bungee.api.plugin.TabExecutor
-import permission.Permission
+import permission.extensions.delete
+import permission.extensions.update
 import permission.group.PermissionGroup
 import permission.group.manager.PermissionGroupManager
-import permission.group.manager.delete
-import permission.group.manager.update
 import permission.player.PermissionPlayer
-import permission.update
 
 class PermissionCommand(
     private val permissionSystem: PermissionSystem,
@@ -42,6 +39,7 @@ class PermissionCommand(
                 val group = permissionGroupManager.getPermissionGroup(args[1])
                 when (args[2].lowercase()) {
                     "create" -> {
+
                         group.get()?.let {
                             sender.sendMessage(TextComponent("§cGroup already exists"))
                             return
@@ -56,11 +54,15 @@ class PermissionCommand(
                     }
 
                     "delete" -> {
-                        group.get()?.let {
-                            it.delete()
-                            it.update()
-                            sender.sendMessage(TextComponent("§aGroup §7${it.getName()} §awas successfully deleted."))
-                        } ?: sender.sendMessage(TextComponent("§cGroup does not exist"))
+
+                        group.whenComplete { nonBlockingGroup, throwable ->
+                            if (throwable != null) {
+                                sender.sendMessage(TextComponent("§cGroup does not exist"))
+                                return@whenComplete
+                            }
+                            nonBlockingGroup?.delete()
+                            sender.sendMessage(TextComponent("§aGroup §7${nonBlockingGroup?.getName()} §awas successfully deleted."))
+                        }
                     }
 
                     "inheritance" -> {

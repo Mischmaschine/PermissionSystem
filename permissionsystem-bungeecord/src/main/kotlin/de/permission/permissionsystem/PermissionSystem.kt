@@ -7,7 +7,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.plugin.Plugin
 import permission.PermissionInitializer
 
-
 class PermissionSystem : Plugin() {
 
     override fun onEnable() {

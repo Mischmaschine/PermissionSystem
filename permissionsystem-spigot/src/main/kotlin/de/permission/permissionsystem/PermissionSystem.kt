@@ -8,9 +8,9 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.messaging.PluginMessageListener
 import permission.PermissionInitializer
+import permission.extensions.updateCache
 import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager
-import permission.updateCache
 
 class PermissionSystem : JavaPlugin(), PluginMessageListener {
 

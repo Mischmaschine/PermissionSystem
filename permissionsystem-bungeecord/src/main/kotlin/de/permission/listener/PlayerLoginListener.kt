@@ -5,9 +5,9 @@ import getPermissionPlayer
 import net.md_5.bungee.api.event.LoginEvent
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
+import permission.extensions.update
 import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager
-import permission.update
 
 class PlayerLoginListener(
     private val permissionSystem: PermissionSystem,

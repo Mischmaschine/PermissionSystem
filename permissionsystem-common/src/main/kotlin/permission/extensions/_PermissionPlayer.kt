@@ -1,4 +1,4 @@
-package permission
+package permission.extensions
 
 import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager

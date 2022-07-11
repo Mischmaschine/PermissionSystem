@@ -12,12 +12,14 @@ interface PermissionEntity {
     /**
      * Returns the permission from the given name.
      */
-    fun getPermissionByName(name: String): Permission? = getAllNotExpiredPermissions().find { it.permissionName == name }
+    fun getPermissionByName(name: String): Permission? =
+        getAllNotExpiredPermissions().find { it.permissionName == name }
 
     /**
      * Returns all permissions of this entity which are not expired.
      */
-    fun getAllNotExpiredPermissions(): Collection<Permission> = getPermissions().filter { !it.isExpired() }
+    fun getAllNotExpiredPermissions(): Collection<Permission> =
+        getPermissions().filter { !it.also { if (it.isExpired()) removePermission(it) }.isExpired() }
 
     /**
      * Sets the permission to the given value.

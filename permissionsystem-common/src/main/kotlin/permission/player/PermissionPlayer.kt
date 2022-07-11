@@ -26,8 +26,6 @@ class PermissionPlayer(
 ) : PermissionEntity {
 
     override fun getPermissions(): MutableCollection<Permission> {
-        val permissions = this.permissions
-        getAllNotExpiredPermissionGroups().map { it.getPermissions() }.forEach { permissions.addAll(it) }
         return this.permissions
     }
 
@@ -59,14 +57,13 @@ class PermissionPlayer(
         return permissionInfoGroups
     }
 
-
     override fun addPermission(permission: Permission) {
         this.permissions.add(permission)
     }
 
     override fun hasPermission(permission: String): Boolean {
         val permissionName = getAllNotExpiredPermissions().find { it.permissionName == permission }
-        permissionName?.let { return it.isExpired() }
+        permissionName?.let { return true }
 
         val permissionBool = getAllNotExpiredPermissionGroups().any { it.hasPermission(permission) }
         return if (permissionBool) {

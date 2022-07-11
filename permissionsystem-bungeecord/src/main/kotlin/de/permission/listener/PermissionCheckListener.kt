@@ -5,7 +5,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.event.PermissionCheckEvent
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
-import permission.update
+import permission.extensions.update
 import java.util.concurrent.CompletableFuture
 
 class PermissionCheckListener : Listener {
