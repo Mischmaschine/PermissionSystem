@@ -1,0 +1,9 @@
+{
+  "id": "permissionsystem",
+  "name": "PermissionSystem",
+  "version": "1.0",
+  "authors": [
+    "Mischmaschine"
+  ],
+  "main": "de.permissionsystem.velocity.VelocityPluginMain"
+}
