@@ -1,7 +1,7 @@
 package de.permission.listener
 
+import de.permission.extensions.getPermissionPlayer
 import de.permission.permissionsystem.PermissionSystem
-import getPermissionPlayer
 import net.md_5.bungee.api.event.LoginEvent
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
@@ -20,14 +20,16 @@ class PlayerLoginListener(
 
         event.registerIntent(permissionSystem)
 
-        val permissionPlayer = player.getPermissionPlayer().get()
-        permissionPlayer?.let {
-            it.getPermissions().filter { permission -> permission.isExpired() }.forEach(it::removePermission).also {
-                permissionPlayer.update()
-            }
-        } ?: permissionPlayerManager.createPermissionPlayer(
-            PermissionPlayer(event.connection.uniqueId)
-        )
+        player.getPermissionPlayer().onSuccess {
+            it?.getPermissions()?.filter { permission -> permission.isExpired() }?.forEach(it::removePermission)
+                .also { _ ->
+                    it?.update()
+                }
+        }.onFailure {
+            permissionPlayerManager.createPermissionPlayer(
+                PermissionPlayer(event.connection.uniqueId)
+            )
+        }
         event.completeIntent(permissionSystem)
 
     }

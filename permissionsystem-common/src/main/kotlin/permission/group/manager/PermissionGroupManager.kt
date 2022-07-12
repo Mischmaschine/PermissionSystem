@@ -1,22 +1,17 @@
 package permission.group.manager
 
 import permission.data.groupdata.IPermissionGroupData
+import permission.future.FutureAction
 import permission.group.PermissionGroup
-import java.util.concurrent.CompletableFuture
 
 class PermissionGroupManager(private val permissionGroupData: IPermissionGroupData) {
 
     private val permissionGroups = mutableMapOf<String, PermissionGroup>()
 
-    fun getPermissionGroup(name: String): CompletableFuture<PermissionGroup?> {
+    fun getPermissionGroup(name: String): FutureAction<PermissionGroup?> {
         return getCachedPermissionGroup(name)?.let {
-            CompletableFuture.completedFuture(it)
-        } ?: permissionGroupData.getPermissionGroupData(name).thenApply {
-            it?.let {
-                permissionGroups[it.getName()] = it
-                it
-            }
-        }
+            FutureAction(it)
+        } ?: permissionGroupData.getPermissionGroupData(name)
     }
 
     fun deletePermissionGroup(permissionGroup: PermissionGroup) {

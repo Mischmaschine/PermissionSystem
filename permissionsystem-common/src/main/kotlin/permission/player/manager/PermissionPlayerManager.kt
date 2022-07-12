@@ -1,24 +1,20 @@
 package permission.player.manager
 
 import permission.data.playerdata.IPermissionPlayerData
+import permission.future.FutureAction
 import permission.player.PermissionPlayer
 import java.util.*
-import java.util.concurrent.CompletableFuture
 
 class PermissionPlayerManager(private val permissionPlayerData: IPermissionPlayerData) {
 
     private val permissionPlayers = mutableMapOf<UUID, PermissionPlayer>()
 
-    fun getPermissionPlayer(uuid: UUID): CompletableFuture<PermissionPlayer?> {
+    fun getPermissionPlayer(uuid: UUID): FutureAction<PermissionPlayer?> {
         return getCachedPermissionPlayer(uuid)?.let {
-            CompletableFuture.completedFuture(it)
-        } ?: permissionPlayerData.getPermissionPlayerData(uuid).thenApply {
-            it?.let {
-                permissionPlayers[it.uuid] = it
-                it
-            }
-        }
+            FutureAction(it)
+        } ?: permissionPlayerData.getPermissionPlayerData(uuid)
     }
+
 
     fun createPermissionPlayer(permissionPlayer: PermissionPlayer) {
         updatePermissionPlayerCache(permissionPlayer)

@@ -1,6 +1,7 @@
 package de.permission.permissionsystem
 
 import com.google.common.io.ByteStreams
+import de.permission.BungeeCommandManagerSurrogate
 import de.permission.listener.event.EventRegistrationService
 import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.connection.ProxiedPlayer
@@ -11,12 +12,17 @@ class PermissionSystem : Plugin() {
 
     override fun onEnable() {
         val permissionInitializer = PermissionInitializer(this.dataFolder.absolutePath)
+        val bungeeCommandManager = BungeeCommandManagerSurrogate(this)
+        bungeeCommandManager.enableUnstableAPI("help")
         EventRegistrationService(
             this,
             permissionInitializer.permissionPlayerManager,
-            permissionInitializer.permissionGroupManager
+            permissionInitializer.permissionGroupManager,
+            bungeeCommandManager
         )
         proxy.registerChannel("player:permsUpdate")
+
+
     }
 
     fun sendCustomData(player: ProxiedPlayer, permissionJson: String) {

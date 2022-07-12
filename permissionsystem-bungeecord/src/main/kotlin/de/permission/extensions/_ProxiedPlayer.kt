@@ -1,14 +1,16 @@
+package de.permission.extensions
+
 import net.md_5.bungee.api.connection.PendingConnection
 import net.md_5.bungee.api.connection.ProxiedPlayer
+import permission.future.FutureAction
 import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager
-import java.util.concurrent.CompletableFuture
 
-fun ProxiedPlayer.getPermissionPlayer(): CompletableFuture<PermissionPlayer?> {
+fun ProxiedPlayer.getPermissionPlayer(): FutureAction<PermissionPlayer?> {
     return PermissionPlayerManager.instance.getPermissionPlayer(this.uniqueId)
 }
 
-fun PendingConnection.getPermissionPlayer(): CompletableFuture<PermissionPlayer?> {
+fun PendingConnection.getPermissionPlayer(): FutureAction<PermissionPlayer?> {
     return PermissionPlayerManager.instance.getPermissionPlayer(uniqueId)
 }
 

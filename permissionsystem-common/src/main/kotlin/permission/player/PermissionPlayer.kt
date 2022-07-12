@@ -2,6 +2,7 @@ package permission.player
 
 import kotlinx.serialization.Serializable
 import permission.Permission
+import permission.future.FutureAction
 import permission.group.PermissionGroup
 import permission.group.PermissionInfoGroup
 import permission.group.manager.PermissionGroupManager
@@ -48,9 +49,9 @@ class PermissionPlayer(
 
     fun getAllNotExpiredPermissionGroups(): Collection<PermissionGroup> {
         val permissionInfoGroups = getAllNotExpiredPermissionInfoGroups().mapNotNull {
-            val infoGroup = PermissionGroupManager.instance.getPermissionGroup(it.groupName).get()
-            infoGroup?.let { permissionGroup ->
-                removePermissionInfoGroup(permissionGroup.getName())
+            val infoGroup = FutureAction(PermissionGroupManager.instance.getPermissionGroup(it.groupName)).get()
+            infoGroup.let { permissionGroup ->
+                if (permissionGroup == null) removePermissionInfoGroup(it.groupName)
             }
             infoGroup
         }

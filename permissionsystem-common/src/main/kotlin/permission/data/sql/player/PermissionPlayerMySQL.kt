@@ -4,28 +4,31 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import permission.data.playerdata.IPermissionPlayerData
 import permission.data.sql.MySQL
+import permission.future.FutureAction
 import permission.player.PermissionPlayer
 import java.sql.SQLException
 import java.util.*
-import java.util.concurrent.CompletableFuture
 
 internal class PermissionPlayerMySQL : IPermissionPlayerData {
 
     private val mySQL = MySQL()
 
-    override fun getPermissionPlayerData(uuid: UUID): CompletableFuture<PermissionPlayer?> {
-        return CompletableFuture.supplyAsync {
-            val resultSet =
-                mySQL.getResultSync(PERMISSION_PLAYER_TABLE, "uuid", uuid.toString())?.getResultSet()
-                    ?: throw SQLException(
-                        "No result found"
-                    )
-            return@supplyAsync if(resultSet.next()) {
-                json.decodeFromString(resultSet.getString("data"))
-            } else {
-                null
-            }
+    override fun getPermissionPlayerData(uuid: UUID): FutureAction<PermissionPlayer?> {
+        val future = FutureAction<PermissionPlayer?>()
+
+        val resultSet =
+            mySQL.getResultSync(PERMISSION_PLAYER_TABLE, "uuid", uuid.toString())?.getResultSet() ?: throw SQLException(
+                "No result found"
+            )
+        val permissionPlayer = if (resultSet.next()) {
+            json.decodeFromString<PermissionPlayer>(resultSet.getString("data"))
+        } else {
+            null
         }
+        permissionPlayer?.let {
+            future.complete(it)
+        } ?: future.completeExceptionally(SQLException("No result found"))
+        return future
     }
 
     override fun updatePermissionPlayerData(permissionPlayer: PermissionPlayer) {

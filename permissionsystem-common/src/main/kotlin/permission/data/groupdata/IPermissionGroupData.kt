@@ -1,16 +1,16 @@
 package permission.data.groupdata
 
 import kotlinx.serialization.json.Json
+import permission.future.FutureAction
 import permission.group.PermissionGroup
 import permission.player.PermissionPlayer
-import java.util.concurrent.CompletableFuture
 
 interface IPermissionGroupData {
 
     /**
      * Gets the [PermissionPlayer] associated with this data.
      */
-    fun getPermissionGroupData(name: String): CompletableFuture<PermissionGroup?>
+    fun getPermissionGroupData(name: String): FutureAction<PermissionGroup?>
 
     /**
      * Updates the [PermissionPlayer] associated with this data.
