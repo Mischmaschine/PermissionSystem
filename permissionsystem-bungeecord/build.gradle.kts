@@ -10,6 +10,7 @@ repositories {
     mavenCentral()
     maven("https://oss.sonatype.org/content/repositories/snapshots") //BungeeCord-Repository
     maven("https://jitpack.io")
+    maven("https://repo.aikar.co/content/groups/aikar/")
 }
 
 
@@ -21,6 +22,7 @@ tasks {
 dependencies {
     implementation(project(":permissionsystem-common"))
     compileOnly("net.md-5:bungeecord-api:1.19-R0.1-SNAPSHOT")
+    implementation("co.aikar:acf-bungee:0.5.0-SNAPSHOT")
 }
 
 tasks.getByName<Test>("test") {

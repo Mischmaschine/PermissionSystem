@@ -10,6 +10,7 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
     maven("https://jitpack.io")
+    maven("https://repo.aikar.co/content/groups/aikar/")
 }
 
 tasks {

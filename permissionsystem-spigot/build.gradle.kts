@@ -10,6 +10,7 @@ repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") //Spigot-Repository
     maven("https://jitpack.io")
+    maven("https://repo.aikar.co/content/groups/aikar/")
 }
 
 tasks {
@@ -21,6 +22,7 @@ tasks {
 dependencies {
     implementation(project(":permissionsystem-common"))
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+    implementation("co.aikar:acf-paper:0.5.0-SNAPSHOT")
 }
 
 tasks.getByName<Test>("test") {
