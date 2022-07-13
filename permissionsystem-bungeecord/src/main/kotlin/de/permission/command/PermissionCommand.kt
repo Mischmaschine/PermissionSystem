@@ -38,9 +38,9 @@ class PermissionCommand(
         }
     }
 
-    @Subcommand("user {player} group add")
+    @Subcommand("user")
     @Syntax("<target> <permission>")
-    @CommandCompletion("@players")
+    @CommandCompletion("@players permission add")
     fun onPermissionAdd(commandSender: CommandSender, playerName: String, permission: Permission) {
         val player = ProxyServer.getInstance().getPlayer(playerName)
         permissionPlayerManager.getPermissionPlayer(player.uniqueId).onSuccess {
@@ -54,7 +54,7 @@ class PermissionCommand(
 
     @Subcommand("user")
     @Syntax("<target> <permission>")
-    @CommandCompletion("")
+    @CommandCompletion("@players permission remove")
     fun onPermissionRemove(commandSender: CommandSender, playerName: String, permission: Permission) {
         val player = ProxyServer.getInstance().getPlayer(playerName)
         permissionPlayerManager.getPermissionPlayer(player.uniqueId).onSuccess {
