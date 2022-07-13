@@ -22,8 +22,16 @@ class PermissionSystem : JavaPlugin(), PluginMessageListener {
         server.messenger.registerIncomingPluginChannel(this, "player:permsUpdate", this)
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, Runnable {
             permissionPlayerManager.getAllCachedPermissionPlayers().forEach {
-                Bukkit.broadcastMessage("Permission: ${it.getPermissions().map { permission -> permission.permissionName }}")
-                Bukkit.broadcastMessage("Permission: ${it.getPermissions().map { permission -> permission.getRemainingTime() }}")
+                Bukkit.broadcastMessage(
+                    "Permission: ${
+                        it.getPermissions().map { permission -> permission.permissionName }
+                    }"
+                )
+                Bukkit.broadcastMessage(
+                    "Permission: ${
+                        it.getPermissions().map { permission -> permission.getRemainingTime() }
+                    }"
+                )
             }
         }, 0, 45)
     }
