@@ -41,26 +41,26 @@ class EventRegistrationService(
     }
 
     fun initContexts() {
-        val commandContexts = bungeeCommandManager.commandContexts
-        commandContexts.registerContext(
-            Permission::class.java,
-            ContextResolver {
-                it.sender
-                println(it.args)
-                val input = it.popFirstArg()
-                val timeout = it.popFirstArg().toLongOrNull() ?: 0
-                return@ContextResolver Permission(input, timeout)
-            }
-        )
-        commandContexts.registerContext(
-            PermissionInfoGroup::class.java,
-            ContextResolver {
-                it.sender
-                println(it.args)
-                val input = it.popFirstArg()
-                val timeout = it.popFirstArg().toLongOrNull() ?: 0
-                return@ContextResolver PermissionInfoGroup(input, timeout)
-            }
-        )
+        with(bungeeCommandManager.commandContexts) {
+            registerContext(
+                Permission::class.java,
+                ContextResolver {
+                    it.sender
+                    println(it.args)
+                    val input = it.popFirstArg()
+                    val timeout = it.popFirstArg().toLongOrNull() ?: 0
+                    return@ContextResolver Permission(input, timeout)
+                })
+            registerContext(
+                PermissionInfoGroup::class.java,
+                ContextResolver {
+                    it.sender
+                    println(it.args)
+                    val input = it.popFirstArg()
+                    val timeout = it.popFirstArg().toLongOrNull() ?: 0
+                    return@ContextResolver PermissionInfoGroup(input, timeout)
+                }
+            )
+        }
     }
 }
