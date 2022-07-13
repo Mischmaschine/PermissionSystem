@@ -12,15 +12,19 @@ class PermissionGroupDataMongoDB(private val mongoDB: MongoDB) : IPermissionGrou
 
     override fun getPermissionGroupData(name: String): FutureAction<PermissionGroup?> {
         val future = FutureAction<PermissionGroup?>()
-        val permissionGroup = mongoDB.getDocumentSync(PERMISSION_GROUP_COLLECTION, name)
-            ?.getString(PERMISSION_GROUP_DATA)?.let {
-                json.decodeFromString<PermissionGroup>(
-                    it
-                )
-            }
-        permissionGroup?.let {
-            future.complete(it)
-        } ?: future.completeExceptionally(NullPointerException("permissionGroup is null"))
+
+        executors.submit {
+            val permissionGroup = mongoDB.getDocumentSync(PERMISSION_GROUP_COLLECTION, name)
+                ?.getString(PERMISSION_GROUP_DATA)?.let {
+                    json.decodeFromString<PermissionGroup>(
+                        it
+                    )
+                }
+            permissionGroup?.let {
+                future.complete(it)
+            } ?: future.completeExceptionally(NullPointerException("permissionGroup is null"))
+        }
+
         return future
     }
 

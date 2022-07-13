@@ -16,18 +16,21 @@ internal class PermissionPlayerMySQL : IPermissionPlayerData {
     override fun getPermissionPlayerData(uuid: UUID): FutureAction<PermissionPlayer?> {
         val future = FutureAction<PermissionPlayer?>()
 
-        val resultSet =
-            mySQL.getResultSync(PERMISSION_PLAYER_TABLE, "uuid", uuid.toString())?.getResultSet() ?: throw SQLException(
-                "No result found"
-            )
-        val permissionPlayer = if (resultSet.next()) {
-            json.decodeFromString<PermissionPlayer>(resultSet.getString("data"))
-        } else {
-            null
+        executors.submit {
+            val resultSet =
+                mySQL.getResultSync(PERMISSION_PLAYER_TABLE, "uuid", uuid.toString())?.getResultSet()
+                    ?: throw SQLException(
+                        "No result found"
+                    )
+            val permissionPlayer = if (resultSet.next()) {
+                json.decodeFromString<PermissionPlayer>(resultSet.getString("data"))
+            } else {
+                null
+            }
+            permissionPlayer?.let {
+                future.complete(it)
+            } ?: future.completeExceptionally(SQLException("No result found"))
         }
-        permissionPlayer?.let {
-            future.complete(it)
-        } ?: future.completeExceptionally(SQLException("No result found"))
         return future
     }
 

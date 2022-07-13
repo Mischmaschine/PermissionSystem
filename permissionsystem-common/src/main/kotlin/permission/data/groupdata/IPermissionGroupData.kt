@@ -4,6 +4,8 @@ import kotlinx.serialization.json.Json
 import permission.future.FutureAction
 import permission.group.PermissionGroup
 import permission.player.PermissionPlayer
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 interface IPermissionGroupData {
 
@@ -32,4 +34,7 @@ interface IPermissionGroupData {
      */
     val json: Json
         get() = Json { prettyPrint = true }
+
+    val executors: ExecutorService
+        get() = Executors.newCachedThreadPool()
 }
