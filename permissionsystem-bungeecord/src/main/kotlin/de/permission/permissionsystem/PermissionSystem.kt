@@ -25,7 +25,7 @@ class PermissionSystem : Plugin() {
 
     }
 
-    fun sendCustomData(player: ProxiedPlayer, permissionJson: String) {
+    fun publishData(player: ProxiedPlayer, permissionJson: String) {
         val networkPlayers = ProxyServer.getInstance().players
         networkPlayers?.let {
             if (it.isEmpty()) {

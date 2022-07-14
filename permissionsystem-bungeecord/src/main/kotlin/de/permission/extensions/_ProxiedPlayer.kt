@@ -6,11 +6,11 @@ import permission.future.FutureAction
 import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager
 
-fun ProxiedPlayer.getPermissionPlayer(): FutureAction<PermissionPlayer?> {
+fun ProxiedPlayer.getPermissionPlayer(): FutureAction<PermissionPlayer> {
     return PermissionPlayerManager.instance.getPermissionPlayer(this.uniqueId)
 }
 
-fun PendingConnection.getPermissionPlayer(): FutureAction<PermissionPlayer?> {
+fun PendingConnection.getPermissionPlayer(): FutureAction<PermissionPlayer> {
     return PermissionPlayerManager.instance.getPermissionPlayer(uniqueId)
 }
 

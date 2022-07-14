@@ -2,7 +2,7 @@ package permission.group
 
 import permission.player.PermissionEntity
 
-interface IPermissionGroup : PermissionEntity {
+internal interface IPermissionGroup : PermissionEntity {
 
     /**
      * Adds an inherited permission group.

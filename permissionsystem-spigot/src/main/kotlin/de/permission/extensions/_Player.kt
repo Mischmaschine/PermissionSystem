@@ -1,9 +1,11 @@
+package de.permission.extensions
+
 import org.bukkit.entity.Player
+import permission.future.FutureAction
 import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager
-import java.util.concurrent.CompletableFuture
 
-fun Player.getPermissionPlayer(): CompletableFuture<PermissionPlayer?> {
+fun Player.getPermissionPlayer(): FutureAction<PermissionPlayer> {
     return PermissionPlayerManager.instance.getPermissionPlayer(this.uniqueId)
 }
 

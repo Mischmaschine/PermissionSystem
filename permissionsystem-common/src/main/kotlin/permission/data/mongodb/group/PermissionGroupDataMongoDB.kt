@@ -8,10 +8,10 @@ import permission.data.mongodb.MongoDB
 import permission.future.FutureAction
 import permission.group.PermissionGroup
 
-class PermissionGroupDataMongoDB(private val mongoDB: MongoDB) : IPermissionGroupData {
+internal class PermissionGroupDataMongoDB(private val mongoDB: MongoDB) : IPermissionGroupData {
 
-    override fun getPermissionGroupData(name: String): FutureAction<PermissionGroup?> {
-        val future = FutureAction<PermissionGroup?>()
+    override fun getPermissionGroupData(name: String): FutureAction<PermissionGroup> {
+        val future = FutureAction<PermissionGroup>()
 
         executors.submit {
             val permissionGroup = mongoDB.getDocumentSync(PERMISSION_GROUP_COLLECTION, name)
@@ -44,8 +44,8 @@ class PermissionGroupDataMongoDB(private val mongoDB: MongoDB) : IPermissionGrou
         )
     }
 
-    override fun deletePermissionGroupData(permissionGroup: PermissionGroup) {
-        mongoDB.deleteDocumentAsync(PERMISSION_GROUP_COLLECTION, permissionGroup.getName())
+    override fun deletePermissionGroupData(permissionGroupName: String) {
+        mongoDB.deleteDocumentAsync(PERMISSION_GROUP_COLLECTION, permissionGroupName)
     }
 
     companion object {

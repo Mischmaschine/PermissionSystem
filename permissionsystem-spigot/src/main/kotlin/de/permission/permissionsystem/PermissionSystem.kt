@@ -24,7 +24,7 @@ class PermissionSystem : JavaPlugin(), PluginMessageListener {
             permissionPlayerManager.getAllCachedPermissionPlayers().forEach {
                 Bukkit.broadcastMessage(
                     "Permission: ${
-                        it.getPermissions().map { permission -> permission.permissionName }
+                        it.getAllNotExpiredPermissions().map { permission -> permission.permissionName }
                     }"
                 )
                 Bukkit.broadcastMessage(

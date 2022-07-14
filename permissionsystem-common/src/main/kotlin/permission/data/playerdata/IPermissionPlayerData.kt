@@ -12,7 +12,7 @@ interface IPermissionPlayerData {
     /**
      * Gets the [PermissionPlayer] associated with this data.
      */
-    fun getPermissionPlayerData(uuid: UUID): FutureAction<PermissionPlayer?>
+    fun getPermissionPlayerData(uuid: UUID): FutureAction<PermissionPlayer>
 
     /**
      * Updates the [PermissionPlayer] associated with this data.
@@ -25,7 +25,10 @@ interface IPermissionPlayerData {
     fun setPermissionPlayerData(permissionPlayer: PermissionPlayer)
 
     val json: Json
-        get() = Json { prettyPrint = true }
+        get() = Json {
+            prettyPrint = true
+            encodeDefaults = true
+        }
 
     val executors: ExecutorService
         get() = Executors.newCachedThreadPool()

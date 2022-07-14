@@ -12,7 +12,7 @@ interface IPermissionGroupData {
     /**
      * Gets the [PermissionPlayer] associated with this data.
      */
-    fun getPermissionGroupData(name: String): FutureAction<PermissionGroup?>
+    fun getPermissionGroupData(name: String): FutureAction<PermissionGroup>
 
     /**
      * Updates the [PermissionPlayer] associated with this data.
@@ -27,13 +27,16 @@ interface IPermissionGroupData {
     /**
      * Removes the [PermissionPlayer] associated with this data.
      */
-    fun deletePermissionGroupData(permissionGroup: PermissionGroup)
+    fun deletePermissionGroupData(permissionGroupName: String)
 
     /**
      * Returns Json serializer.
      */
     val json: Json
-        get() = Json { prettyPrint = true }
+        get() = Json {
+            prettyPrint = true
+            encodeDefaults = true
+        }
 
     val executors: ExecutorService
         get() = Executors.newCachedThreadPool()

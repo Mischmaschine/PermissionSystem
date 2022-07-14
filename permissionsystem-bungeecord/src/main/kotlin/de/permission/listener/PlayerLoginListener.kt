@@ -9,21 +9,20 @@ import permission.extensions.update
 import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager
 
-class PlayerLoginListener(
+internal class PlayerLoginListener(
     private val permissionSystem: PermissionSystem,
     private val permissionPlayerManager: PermissionPlayerManager
 ) : Listener {
 
     @EventHandler
     fun onPlayerLogin(event: LoginEvent) {
-        val player = event.connection
 
         event.registerIntent(permissionSystem)
 
-        player.getPermissionPlayer().onSuccess {
-            it?.getPermissions()?.filter { permission -> permission.isExpired() }?.forEach(it::removePermission)
+        event.connection.getPermissionPlayer().onSuccess {
+            it.getPermissions().filter { permission -> permission.isExpired() }.forEach(it::removePermission)
                 .also { _ ->
-                    it?.update()
+                    it.update()
                 }
         }.onFailure {
             permissionPlayerManager.createPermissionPlayer(

@@ -28,7 +28,7 @@ class EventRegistrationService(
         //registerCommands(PermissionCommandOld(permissionSystem, permissionGroupManager))
 
         initContexts()
-        bungeeCommandManager.registerCommand(PermissionCommand(permissionPlayerManager, permissionGroupManager))
+        bungeeCommandManager.registerCommand(PermissionCommand(permissionSystem, permissionGroupManager))
 
     }
 

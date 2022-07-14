@@ -1,7 +1,6 @@
 package permission.data.sql.player
 
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import permission.data.playerdata.IPermissionPlayerData
 import permission.data.sql.MySQL
 import permission.future.FutureAction
@@ -13,8 +12,8 @@ internal class PermissionPlayerMySQL : IPermissionPlayerData {
 
     private val mySQL = MySQL()
 
-    override fun getPermissionPlayerData(uuid: UUID): FutureAction<PermissionPlayer?> {
-        val future = FutureAction<PermissionPlayer?>()
+    override fun getPermissionPlayerData(uuid: UUID): FutureAction<PermissionPlayer> {
+        val future = FutureAction<PermissionPlayer>()
 
         executors.submit {
             val resultSet =
@@ -37,14 +36,14 @@ internal class PermissionPlayerMySQL : IPermissionPlayerData {
     override fun updatePermissionPlayerData(permissionPlayer: PermissionPlayer) {
         mySQL.updateAsync(
             PERMISSION_PLAYER_TABLE,
-            "uuid", permissionPlayer.uuid.toString(), "data", json.encodeToString(permissionPlayer)
+            "uuid", permissionPlayer.uuid.toString(), "data", permissionPlayer.encodeToString()
         )
     }
 
     override fun setPermissionPlayerData(permissionPlayer: PermissionPlayer) {
         mySQL.insertAsync(
             PERMISSION_PLAYER_TABLE,
-            listOf(permissionPlayer.uuid.toString(), json.encodeToString(permissionPlayer)),
+            listOf(permissionPlayer.uuid.toString(), permissionPlayer.encodeToString()),
         )
     }
 

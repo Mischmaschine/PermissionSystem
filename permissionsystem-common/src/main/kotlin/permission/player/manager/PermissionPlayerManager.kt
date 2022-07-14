@@ -9,12 +9,15 @@ class PermissionPlayerManager(private val permissionPlayerData: IPermissionPlaye
 
     private val permissionPlayers = mutableMapOf<UUID, PermissionPlayer>()
 
-    fun getPermissionPlayer(uuid: UUID): FutureAction<PermissionPlayer?> {
+    fun getPermissionPlayer(uuid: UUID): FutureAction<PermissionPlayer> {
         return getCachedPermissionPlayer(uuid)?.let {
             FutureAction(it)
-        } ?: permissionPlayerData.getPermissionPlayerData(uuid)
+        } ?: permissionPlayerData.getPermissionPlayerData(uuid).run {
+            onSuccess {
+                permissionPlayers[uuid] = it
+            }.onFailure { println("[Permission] Failed to load player data for $uuid") }
+        }
     }
-
 
     fun createPermissionPlayer(permissionPlayer: PermissionPlayer) {
         updatePermissionPlayerCache(permissionPlayer)
@@ -34,8 +37,8 @@ class PermissionPlayerManager(private val permissionPlayerData: IPermissionPlaye
         return permissionPlayers[uuid]
     }
 
-    fun getAllCachedPermissionPlayers(): List<PermissionPlayer> {
-        return permissionPlayers.values.toList()
+    fun getAllCachedPermissionPlayers(): Collection<PermissionPlayer> {
+        return permissionPlayers.values
     }
 
     companion object {

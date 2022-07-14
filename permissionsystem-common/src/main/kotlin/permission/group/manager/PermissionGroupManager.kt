@@ -4,19 +4,19 @@ import permission.data.groupdata.IPermissionGroupData
 import permission.future.FutureAction
 import permission.group.PermissionGroup
 
-class PermissionGroupManager(private val permissionGroupData: IPermissionGroupData) {
+internal class PermissionGroupManager(private val permissionGroupData: IPermissionGroupData) {
 
     private val permissionGroups = mutableMapOf<String, PermissionGroup>()
 
-    fun getPermissionGroup(name: String): FutureAction<PermissionGroup?> {
+    fun getPermissionGroup(name: String): FutureAction<PermissionGroup> {
         return getCachedPermissionGroup(name)?.let {
             FutureAction(it)
         } ?: permissionGroupData.getPermissionGroupData(name)
     }
 
-    fun deletePermissionGroup(permissionGroup: PermissionGroup) {
-        this.permissionGroups.remove(permissionGroup.getName())
-        permissionGroupData.deletePermissionGroupData(permissionGroup)
+    fun deletePermissionGroup(permissionGroupName: String) {
+        this.permissionGroups.remove(permissionGroupName)
+        permissionGroupData.deletePermissionGroupData(permissionGroupName)
     }
 
     fun createPermissionGroup(permissionGroup: PermissionGroup) {

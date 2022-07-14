@@ -1,6 +1,7 @@
 package permission.player
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
 import permission.Permission
 import permission.future.FutureAction
 import permission.group.PermissionGroup
@@ -21,9 +22,9 @@ class PermissionPlayer(
     @Serializable(with = UUIDSerializer::class)
     val uuid: UUID,
     @Serializable(with = CollectionSerializer::class)
-    private val permissions: MutableCollection<Permission> = mutableSetOf(),
+    private val permissions: MutableCollection<Permission> = mutableListOf(),
     @Serializable(with = CollectionSerializer::class)
-    private val groups: MutableCollection<PermissionInfoGroup> = mutableSetOf(),
+    private val groups: MutableCollection<PermissionInfoGroup> = mutableListOf(),
 ) : PermissionEntity {
 
     override fun getPermissions(): MutableCollection<Permission> {
@@ -44,18 +45,37 @@ class PermissionPlayer(
     }
 
     fun getAllNotExpiredPermissionInfoGroups(): Collection<PermissionInfoGroup> {
+        if (groups.isEmpty()) return emptyList()
         return getPermissionGroups().filter { !it.isExpired() }
     }
 
     fun getAllNotExpiredPermissionGroups(): Collection<PermissionGroup> {
-        val permissionInfoGroups = getAllNotExpiredPermissionInfoGroups().mapNotNull {
-            val infoGroup = FutureAction(PermissionGroupManager.instance.getPermissionGroup(it.groupName)).get()
-            infoGroup.let { permissionGroup ->
-                if (permissionGroup == null) removePermissionInfoGroup(it.groupName)
+        val permissionInfoGroups: List<FutureAction<PermissionGroup>> =
+            getAllNotExpiredPermissionInfoGroups().map {
+                val permissionGroup = PermissionGroupManager.instance.getPermissionGroup(it.groupName)
+                permissionGroup.onFailure { _ ->
+                    removePermissionInfoGroup(it.groupName)
+                }
+                permissionGroup
             }
-            infoGroup
+        val permissionGroups = mutableListOf<PermissionGroup>()
+
+        permissionInfoGroups.forEach {
+            it.onSuccess { permissionGroup ->
+                permissionGroups.add(permissionGroup)
+            }
         }
-        return permissionInfoGroups
+
+        println(permissionGroups)
+
+        return permissionGroups
+    }
+
+    /**
+     * Returns this class instance as a string.
+     */
+    fun encodeToString(): String {
+        return json.encodeToString(this)
     }
 
     override fun addPermission(permission: Permission) {
