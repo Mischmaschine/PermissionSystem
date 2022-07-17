@@ -1,5 +1,6 @@
 package permission.player
 
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import permission.Permission
 
@@ -62,6 +63,11 @@ internal interface PermissionEntity {
      * Clears all permissions from this entity.
      */
     fun clearPermissions() = getPermissions().clear()
+
+    /**
+     * Returns the class instance as a string.
+     */
+    fun encodeToString(): String = json.encodeToString(this)
 
     val json: Json
         get() = Json {
