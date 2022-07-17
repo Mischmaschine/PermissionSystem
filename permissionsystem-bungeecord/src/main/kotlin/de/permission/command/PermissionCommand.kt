@@ -78,6 +78,7 @@ class PermissionCommand(
                             commandSender.sendMessage(TextComponent("§cPlayer not found"))
                         }
                     }
+
                     "remove" -> {
                         player.getPermissionPlayer().onSuccess {
                             it.removePermission(typeName)
@@ -90,6 +91,7 @@ class PermissionCommand(
                     }
                 }
             }
+
             "group" -> {
                 when (action.lowercase()) {
                     "add" -> {
@@ -105,6 +107,7 @@ class PermissionCommand(
                             commandSender.sendMessage(TextComponent("§cPlayer not found"))
                         }
                     }
+
                     "remove" -> {
                         player.getPermissionPlayer().onSuccess {
                             it.removePermissionInfoGroup(typeName)

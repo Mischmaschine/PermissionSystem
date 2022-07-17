@@ -57,8 +57,8 @@ internal class PermissibleBaseSurrogate(private val player: Player) : Permissibl
 
     }
 
-/*    override fun clearPermissions() {
-        super.clearPermissions()
-        player.getCachedPermissionPlayer()?.clearPermissions() ?: return
-    }*/
+    /*    override fun clearPermissions() {
+            super.clearPermissions()
+            player.getCachedPermissionPlayer()?.clearPermissions() ?: return
+        }*/
 }
