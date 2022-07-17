@@ -15,9 +15,9 @@ internal class PermissionPlayerMongoDB(private val mongoDB: MongoDB) : IPermissi
         val futureAction = FutureAction<PermissionPlayer>()
 
         executors.submit {
-            val permissionPlayer = mongoDB.getDocumentSync(PERMISSION_PLAYER_COLLECTION, uuid.toString())?.let {
-                json.decodeFromString<PermissionPlayer>(it.getString(PERMISSION_PLAYER_DATA))
-            }
+            val permissionPlayer: PermissionPlayer? =
+                mongoDB.getDocumentSync(PERMISSION_PLAYER_COLLECTION, uuid.toString())
+                    ?.let { json.decodeFromString<PermissionPlayer>(it.getString(PERMISSION_PLAYER_DATA)) }
             permissionPlayer?.let {
                 futureAction.complete(it)
             } ?: futureAction.completeExceptionally(NullPointerException("PermissionPlayer not found"))
@@ -26,19 +26,23 @@ internal class PermissionPlayerMongoDB(private val mongoDB: MongoDB) : IPermissi
     }
 
     override fun updatePermissionPlayerData(permissionPlayer: PermissionPlayer) {
-        mongoDB.updateDocumentAsync(
-            PERMISSION_PLAYER_COLLECTION,
-            permissionPlayer.uuid.toString(),
-            Document(PERMISSION_PLAYER_DATA, permissionPlayer.encodeToString())
-        )
+        permissionPlayer.run {
+            mongoDB.updateDocumentAsync(
+                PERMISSION_PLAYER_COLLECTION,
+                uuid.toString(),
+                Document(PERMISSION_PLAYER_DATA, encodeToString())
+            )
+        }
     }
 
     override fun setPermissionPlayerData(permissionPlayer: PermissionPlayer) {
-        mongoDB.insertDocumentAsync(
-            PERMISSION_PLAYER_COLLECTION,
-            permissionPlayer.uuid.toString(),
-            Document(PERMISSION_PLAYER_DATA, permissionPlayer.encodeToString())
-        )
+        permissionPlayer.run {
+            mongoDB.insertDocumentAsync(
+                PERMISSION_PLAYER_COLLECTION,
+                uuid.toString(),
+                Document(PERMISSION_PLAYER_DATA, encodeToString())
+            )
+        }
     }
 
     companion object {

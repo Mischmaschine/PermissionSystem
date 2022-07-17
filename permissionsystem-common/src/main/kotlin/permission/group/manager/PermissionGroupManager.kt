@@ -4,7 +4,7 @@ import permission.data.groupdata.IPermissionGroupData
 import permission.future.FutureAction
 import permission.group.PermissionGroup
 
-internal class PermissionGroupManager(private val permissionGroupData: IPermissionGroupData) {
+class PermissionGroupManager(private val permissionGroupData: IPermissionGroupData) {
 
     private val permissionGroups = mutableMapOf<String, PermissionGroup>()
 
