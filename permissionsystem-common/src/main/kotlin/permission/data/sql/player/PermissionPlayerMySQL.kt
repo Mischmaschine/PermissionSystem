@@ -8,9 +8,7 @@ import permission.player.PermissionPlayer
 import java.sql.SQLException
 import java.util.*
 
-internal class PermissionPlayerMySQL : IPermissionPlayerData {
-
-    private val mySQL = MySQL()
+internal class PermissionPlayerMySQL(private val mySQL: MySQL) : IPermissionPlayerData {
 
     override fun getPermissionPlayerData(uuid: UUID): FutureAction<PermissionPlayer> {
         val future = FutureAction<PermissionPlayer>()
