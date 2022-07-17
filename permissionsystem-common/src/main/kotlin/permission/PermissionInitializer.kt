@@ -13,6 +13,8 @@ import permission.data.DatabaseConfiguration
 import permission.data.mongodb.MongoDB
 import permission.data.mongodb.group.PermissionGroupDataMongoDB
 import permission.data.mongodb.player.PermissionPlayerMongoDB
+import permission.data.sql.MySQL
+import permission.data.sql.group.PermissionGroupDataMySQL
 import permission.data.sql.player.PermissionPlayerMySQL
 import permission.group.manager.PermissionGroupManager
 import permission.player.manager.PermissionPlayerManager
@@ -35,17 +37,18 @@ class PermissionInitializer(absolutePath: String) {
         val format = Json { prettyPrint = true }
         val child =
             File(File(absolutePath).also { it.mkdirs() }, "databaseCredentials.json").also { it.createNewFile() }
-        if (child.readText().isEmpty()) {
+        val childText = child.readText()
+        if (childText.isEmpty()) {
             child.writeText(format.encodeToString(databaseConfiguration))
         } else {
-            databaseConfiguration = format.decodeFromString(child.readText())
+            databaseConfiguration = format.decodeFromString(childText)
         }
         Configuration(
             databaseConfiguration.host,
             databaseConfiguration.port,
             databaseConfiguration.user,
             databaseConfiguration.password,
-            when (databaseConfiguration.databaseType) {
+            when (databaseConfiguration.databaseType.lowercase()) {
                 "mongodb" -> AbstractMongoDB::class
                 "mysql" -> AbstractMySQL::class
                 "sqlite" -> AbstractSQLite::class
@@ -56,23 +59,28 @@ class PermissionInitializer(absolutePath: String) {
                 )
             }
         )
-        val mongoDB = MongoDB()
+        when (databaseConfiguration.databaseType.lowercase()) {
+            "mysql" -> {
+                val mySQL = MySQL(databaseConfiguration.databaseName)
 
-        this.permissionPlayerManager =
-            PermissionPlayerManager(
-                if (databaseConfiguration.databaseType == "mongodb") {
-                    PermissionPlayerMongoDB(mongoDB)
-                } else PermissionPlayerMySQL()
-            )
-        PermissionPlayerManager.instance = permissionPlayerManager
+                this.permissionPlayerManager = PermissionPlayerManager(PermissionPlayerMySQL(mySQL))
+                PermissionPlayerManager.instance = permissionPlayerManager
 
-        this.permissionGroupManager =
-            PermissionGroupManager(
-                if (databaseConfiguration.databaseType == "mongodb") {
-                    PermissionGroupDataMongoDB(mongoDB)
-                } else PermissionGroupDataMongoDB(mongoDB)
-            )
-        PermissionGroupManager.instance = permissionGroupManager
+                this.permissionGroupManager = PermissionGroupManager(PermissionGroupDataMySQL(mySQL))
+                PermissionGroupManager.instance = permissionGroupManager
+            }
 
+            "mongodb" -> {
+                val mongoDB = MongoDB()
+
+                this.permissionPlayerManager = PermissionPlayerManager(PermissionPlayerMongoDB(mongoDB))
+                PermissionPlayerManager.instance = permissionPlayerManager
+
+                this.permissionGroupManager = PermissionGroupManager(PermissionGroupDataMongoDB(mongoDB))
+                PermissionGroupManager.instance = permissionGroupManager
+            }
+
+            else -> throw IllegalArgumentException("Unknown database type: ${databaseConfiguration.databaseType}")
+        }
     }
 }
