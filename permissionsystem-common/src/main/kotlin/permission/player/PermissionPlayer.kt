@@ -1,7 +1,6 @@
 package permission.player
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import permission.Permission
 import permission.future.FutureAction
 import permission.group.PermissionGroup
@@ -69,13 +68,6 @@ class PermissionPlayer(
         println(permissionGroups)
 
         return permissionGroups
-    }
-
-    /**
-     * Returns this class instance as a string.
-     */
-    fun encodeToString(): String {
-        return json.encodeToString(this)
     }
 
     override fun addPermission(permission: Permission) {
