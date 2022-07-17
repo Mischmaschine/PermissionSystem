@@ -19,8 +19,8 @@ internal class PermissionPlayerMySQL(private val mySQL: MySQL) : IPermissionPlay
                     ?: throw SQLException(
                         "No result found"
                     )
-            val permissionPlayer = if (resultSet.next()) {
-                json.decodeFromString<PermissionPlayer>(resultSet.getString("data"))
+            val permissionPlayer: PermissionPlayer? = if (resultSet.next()) {
+                json.decodeFromString(resultSet.getString("data"))
             } else {
                 null
             }

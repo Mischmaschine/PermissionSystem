@@ -17,7 +17,7 @@ internal class PermissionPlayerMongoDB(private val mongoDB: MongoDB) : IPermissi
         executors.submit {
             val permissionPlayer: PermissionPlayer? =
                 mongoDB.getDocumentSync(PERMISSION_PLAYER_COLLECTION, uuid.toString())
-                    ?.let { json.decodeFromString<PermissionPlayer>(it.getString(PERMISSION_PLAYER_DATA)) }
+                    ?.let { json.decodeFromString(it.getString(PERMISSION_PLAYER_DATA)) }
             permissionPlayer?.let {
                 futureAction.complete(it)
             } ?: futureAction.completeExceptionally(NullPointerException("PermissionPlayer not found"))

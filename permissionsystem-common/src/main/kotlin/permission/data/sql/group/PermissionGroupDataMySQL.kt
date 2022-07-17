@@ -12,13 +12,16 @@ class PermissionGroupDataMySQL(private val mySQL: MySQL) : IPermissionGroupData 
         val futureAction = FutureAction<PermissionGroup>()
         executors.submit {
             val resultSet = mySQL.getResultSync(PERMISSION_GROUP_TABLE, "group", name)?.getResultSet()
-            resultSet?.let {
+            val permissionGroup: PermissionGroup? = resultSet?.let {
                 if (it.next()) {
-                    futureAction.complete(json.decodeFromString<PermissionGroup>(it.getString(PERMISSION_GROUP_DATA)))
+                    json.decodeFromString<PermissionGroup>(it.getString(PERMISSION_GROUP_DATA))
                 } else {
-                    futureAction.completeExceptionally(IllegalArgumentException("Permission group $name not found"))
+                    null
                 }
             }
+            permissionGroup?.let {
+                futureAction.complete(it)
+            } ?: futureAction.completeExceptionally(IllegalArgumentException("Permission group $name not found"))
         }
         return futureAction
     }
