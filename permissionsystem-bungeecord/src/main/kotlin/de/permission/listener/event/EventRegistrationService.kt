@@ -2,14 +2,12 @@ package de.permission.listener.event
 
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.BungeeCommandManager
-import co.aikar.commands.contexts.ContextResolver
 import de.permission.command.PermissionCommand
 import de.permission.listener.PermissionCheckListener
 import de.permission.listener.PlayerLoginListener
+import de.permission.listener.PlayerSwitchListener
 import de.permission.permissionsystem.PermissionSystem
 import net.md_5.bungee.api.plugin.Listener
-import permission.Permission
-import permission.group.PermissionInfoGroup
 import permission.group.manager.PermissionGroupManager
 import permission.player.manager.PermissionPlayerManager
 
@@ -23,11 +21,10 @@ class EventRegistrationService(
     init {
         registerListeners(
             PermissionCheckListener(),
-            PlayerLoginListener(permissionSystem, permissionPlayerManager)
+            PlayerLoginListener(permissionSystem, permissionPlayerManager),
+            PlayerSwitchListener(permissionSystem)
         )
         //registerCommands(PermissionCommandOld(permissionSystem, permissionGroupManager))
-
-        initContexts()
         registerCommands(PermissionCommand(permissionSystem, permissionGroupManager))
 
     }
@@ -38,27 +35,5 @@ class EventRegistrationService(
 
     private fun registerCommands(vararg command: BaseCommand) {
         command.forEach { bungeeCommandManager.registerCommand(it) }
-    }
-
-    private fun initContexts() {
-        with(bungeeCommandManager.commandContexts) {
-            registerContext(
-                Permission::class.java,
-                ContextResolver {
-                    it.sender
-                    val input = it.popFirstArg()
-                    val timeout = it.popFirstArg().toLongOrNull() ?: 0
-                    return@ContextResolver Permission(input, timeout)
-                })
-            registerContext(
-                PermissionInfoGroup::class.java,
-                ContextResolver {
-                    it.sender
-                    val input = it.popFirstArg()
-                    val timeout = it.popFirstArg().toLongOrNull() ?: 0
-                    return@ContextResolver PermissionInfoGroup(input, timeout)
-                }
-            )
-        }
     }
 }
