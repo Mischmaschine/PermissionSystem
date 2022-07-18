@@ -1,6 +1,6 @@
 package de.permission
 
-import de.permission.extensions.getPermissionPlayer
+import de.permission.extensions.getCachedPermissionPlayer
 import org.bukkit.entity.Player
 import org.bukkit.permissions.PermissibleBase
 import org.bukkit.permissions.Permission
@@ -11,54 +11,35 @@ internal class PermissibleBaseSurrogate(private val player: Player) : Permissibl
         if (permission == "bukkit.broadcast.user") {
             return true
         }
-        var hasPermission = false
-        player.getPermissionPlayer().onSuccess {
-            hasPermission = it.hasPermission(permission)
-        }
-        return hasPermission
+        return player.getCachedPermissionPlayer()?.hasPermission(permission) ?: false
     }
 
     override fun hasPermission(perm: Permission): Boolean {
         if (perm.name == "bukkit.broadcast.user") {
             return true
         }
-        var hasPermission = false
-        player.getPermissionPlayer().onSuccess {
-            hasPermission = it.hasPermission(perm.name)
-        }
-        return hasPermission
+        return player.getCachedPermissionPlayer()?.hasPermission(perm.name) ?: false
     }
 
     override fun isOp(): Boolean {
-        var hasPermission = false
-        player.getPermissionPlayer().onSuccess {
-            hasPermission = it.hasAllPermissions()
-        }
-        return hasPermission
+        return player.getCachedPermissionPlayer()?.hasAllPermissions() ?: false
+
     }
 
     override fun isPermissionSet(name: String): Boolean {
-        var hasPermission = false
-        player.getPermissionPlayer().onSuccess {
-            hasPermission = it.hasPermission(name)
-        }
-        return hasPermission
+        return player.getCachedPermissionPlayer()?.hasPermission(name) ?: false
+
     }
 
     override fun isPermissionSet(perm: Permission): Boolean {
-        var hasPermission = false
-        player.getPermissionPlayer().onSuccess {
-            hasPermission = it.hasPermission(perm.name)
-        }
-        return hasPermission
+        return player.getCachedPermissionPlayer()?.hasPermission(perm.name) ?: false
     }
 
     override fun recalculatePermissions() {
 
     }
 
-    /*    override fun clearPermissions() {
-            super.clearPermissions()
-            player.getCachedPermissionPlayer()?.clearPermissions() ?: return
-        }*/
+    override fun clearPermissions() {
+        player.getCachedPermissionPlayer()?.clearPermissions() ?: return
+    }
 }
