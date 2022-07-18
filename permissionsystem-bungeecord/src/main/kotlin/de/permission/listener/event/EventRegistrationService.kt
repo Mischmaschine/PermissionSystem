@@ -6,13 +6,13 @@ import de.permission.command.PermissionCommand
 import de.permission.listener.PermissionCheckListener
 import de.permission.listener.PlayerLoginListener
 import de.permission.listener.PlayerSwitchListener
-import de.permission.permissionsystem.PermissionSystem
+import de.permission.permissionsystem.BungeeCordPluginMain
 import net.md_5.bungee.api.plugin.Listener
 import permission.group.manager.PermissionGroupManager
 import permission.player.manager.PermissionPlayerManager
 
 class EventRegistrationService(
-    private val permissionSystem: PermissionSystem,
+    private val BungeeCordPluginMain: BungeeCordPluginMain,
     private val permissionPlayerManager: PermissionPlayerManager,
     private val permissionGroupManager: PermissionGroupManager,
     private val bungeeCommandManager: BungeeCommandManager,
@@ -21,16 +21,16 @@ class EventRegistrationService(
     init {
         registerListeners(
             PermissionCheckListener(),
-            PlayerLoginListener(permissionSystem, permissionPlayerManager),
-            PlayerSwitchListener(permissionSystem)
+            PlayerLoginListener(BungeeCordPluginMain, permissionPlayerManager),
+            PlayerSwitchListener(BungeeCordPluginMain)
         )
         //registerCommands(PermissionCommandOld(permissionSystem, permissionGroupManager))
-        registerCommands(PermissionCommand(permissionSystem, permissionGroupManager))
+        registerCommands(PermissionCommand(BungeeCordPluginMain, permissionGroupManager))
 
     }
 
     private fun registerListeners(vararg listener: Listener) {
-        listener.forEach { permissionSystem.proxy.pluginManager.registerListener(permissionSystem, it) }
+        listener.forEach { BungeeCordPluginMain.proxy.pluginManager.registerListener(BungeeCordPluginMain, it) }
     }
 
     private fun registerCommands(vararg command: BaseCommand) {

@@ -11,7 +11,7 @@ import net.md_5.bungee.api.plugin.Plugin
 import permission.PermissionInitializer
 import permission.player.PermissionPlayer
 
-class PermissionSystem : Plugin() {
+class BungeeCordPluginMain : Plugin() {
 
     val json = Json.Default
 

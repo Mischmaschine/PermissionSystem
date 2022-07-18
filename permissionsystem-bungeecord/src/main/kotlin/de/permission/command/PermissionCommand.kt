@@ -4,7 +4,7 @@ import co.aikar.commands.BaseCommand
 import co.aikar.commands.CommandHelp
 import co.aikar.commands.annotation.*
 import de.permission.extensions.getPermissionPlayer
-import de.permission.permissionsystem.PermissionSystem
+import de.permission.permissionsystem.BungeeCordPluginMain
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.chat.TextComponent
 import permission.Permission
@@ -16,7 +16,7 @@ import permission.group.manager.PermissionGroupManager
 @CommandPermission("permission.command.*")
 @CommandAlias("perms|permission")
 class PermissionCommand(
-    private val permissionSystem: PermissionSystem,
+    private val BungeeCordPluginMain: BungeeCordPluginMain,
     private val permissionGroupManager: PermissionGroupManager
 ) : BaseCommand() {
 
@@ -68,7 +68,7 @@ class PermissionCommand(
         @Optional
         timeout: Long?
     ) {
-        val player = permissionSystem.proxy.getPlayer(playerName) ?: run {
+        val player = BungeeCordPluginMain.proxy.getPlayer(playerName) ?: run {
             commandSender.sendMessage(TextComponent("§cPlayer not found"))
             return
         }
@@ -94,7 +94,7 @@ class PermissionCommand(
                                             println("success132")
                                             it.addPermission(permission)
                                             println("succes345345üüüüüüüüüüüs")
-                                            permissionSystem.publishData(player, it)
+                                            BungeeCordPluginMain.publishData(player, it)
                                             println("successpubluishads")
                                             it.update()
                                             println("updated")
@@ -112,7 +112,7 @@ class PermissionCommand(
                                 typeName?.let { typeName ->
                                     player.getPermissionPlayer().onSuccess {
                                         it.removePermission(typeName)
-                                        permissionSystem.publishData(player, it)
+                                        BungeeCordPluginMain.publishData(player, it)
                                         it.update()
                                         commandSender.sendMessage(TextComponent("§aPermission removed"))
                                     }.onFailure {
@@ -137,7 +137,7 @@ class PermissionCommand(
                                         player.getPermissionPlayer().onSuccess {
                                             val infoGroup = PermissionInfoGroup(typeName, long)
                                             it.addPermissionInfoGroup(infoGroup)
-                                            permissionSystem.publishData(player, it)
+                                            BungeeCordPluginMain.publishData(player, it)
                                             it.update()
                                             commandSender.sendMessage(TextComponent("§aGroup added"))
 
@@ -152,7 +152,7 @@ class PermissionCommand(
                                 typeName?.let { typeName ->
                                     player.getPermissionPlayer().onSuccess {
                                         it.removePermissionInfoGroup(typeName)
-                                        permissionSystem.publishData(player, it)
+                                        BungeeCordPluginMain.publishData(player, it)
                                         it.update()
                                         commandSender.sendMessage(TextComponent("§aGroup removed"))
                                     }.onFailure {
