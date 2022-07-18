@@ -20,7 +20,7 @@ tasks {
 }
 
 dependencies {
-    implementation("com.github.Mischmaschine:DatabaseLib:dev1.0-SNAPSHOT")
+    implementation("com.github.Mischmaschine:DatabaseLib:master-SNAPSHOT")
     implementation("org.mongodb:mongodb-driver-sync:4.6.0")
     compileOnly("org.mariadb.jdbc:mariadb-java-client:3.0.5")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
