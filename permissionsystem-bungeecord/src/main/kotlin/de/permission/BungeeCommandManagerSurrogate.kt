@@ -14,7 +14,7 @@ class BungeeCommandManagerSurrogate(plugin: Plugin) : BungeeCommandManager(plugi
             put(MessageKeys.PERMISSION_DENIED_PARAMETER, "You don't have permission to do that with {0}.")
             put(MessageKeys.ERROR_GENERIC_LOGGED, "An error has occurred: {0}")
             put(MessageKeys.UNKNOWN_COMMAND, "Command not found.")
-            put(MessageKeys.INVALID_SYNTAX, "Invalid syntax.")
+            put(MessageKeys.INVALID_SYNTAX, "§cInvalid syntax.")
             put(MessageKeys.ERROR_PREFIX, "Error: ")
             put(MessageKeys.ERROR_PERFORMING_COMMAND, "An error has occurred while performing the command: {0}")
             put(MessageKeys.INFO_MESSAGE, "Info: {0}")
@@ -28,7 +28,11 @@ class BungeeCommandManagerSurrogate(plugin: Plugin) : BungeeCommandManager(plugi
             put(MessageKeys.COULD_NOT_FIND_PLAYER, "Error: Could not find player {0}.")
             put(MessageKeys.NO_COMMAND_MATCHED_SEARCH, "No commands matched your search.")
             put(MessageKeys.HELP_NO_RESULTS, "No results found.")
-            put(MessageKeys.HELP_FORMAT, "§6{commandprefix}{command} {parameters} §8| §7{description}")
+            put(MessageKeys.HELP_FORMAT, "§6{commandprefix}{command} {parameters} §8┃ §7{description}")
+            put(
+                MessageKeys.HELP_HEADER,
+                "§8§m------------┃§7 Help for §6{commandprefix}{command} §8§m-┃§m-------------"
+            )
         })
     }
 
