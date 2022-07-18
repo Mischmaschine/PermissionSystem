@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.7.10"
     id("com.github.johnrengelman.shadow") version "7.0.0"
+    kotlin("plugin.serialization") version "1.7.10"
 }
 
 group = "de.permissionsystem"
@@ -17,6 +18,7 @@ dependencies {
     compileOnly("com.velocitypowered:velocity-api:3.1.1")
     implementation(project(":permissionsystem-common"))
     implementation("co.aikar:acf-velocity:0.5.0-SNAPSHOT")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 }
 
 tasks {
