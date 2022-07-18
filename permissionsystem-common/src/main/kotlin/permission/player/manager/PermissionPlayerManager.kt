@@ -12,10 +12,10 @@ class PermissionPlayerManager(private val permissionPlayerData: IPermissionPlaye
     fun getPermissionPlayer(uuid: UUID): FutureAction<PermissionPlayer> {
         return getCachedPermissionPlayer(uuid)?.let {
             FutureAction(it)
-        } ?: permissionPlayerData.getPermissionPlayerData(uuid).run {
-            onSuccess {
+        } ?: permissionPlayerData.getPermissionPlayerData(uuid).also { future ->
+            future.onSuccess {
                 permissionPlayers[uuid] = it
-            }.onFailure { println("[Permission] Failed to load player data for $uuid") }
+            }
         }
     }
 
