@@ -1,9 +1,8 @@
 package permission.player
 
 import permission.Permission
-import permission.serialization.DefaultJsonConfiguration
 
-internal interface PermissionEntity : DefaultJsonConfiguration {
+internal interface PermissionEntity {
 
     /**
      * Returns all permissions of this entity.

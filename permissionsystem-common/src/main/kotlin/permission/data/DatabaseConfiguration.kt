@@ -1,14 +1,13 @@
 package permission.data
 
 import kotlinx.serialization.Serializable
-import permission.serialization.DefaultJsonConfiguration
 
 @Serializable
 internal data class DatabaseConfiguration(
-    val databaseType: String,
-    val databaseName: String,
-    val host: String,
-    val port: Int,
-    val user: String,
-    val password: String
-) : DefaultJsonConfiguration
+    val databaseType: String = "mongodb",
+    val databaseName: String = "permissionPlayer",
+    val host: String = "127.0.0.1",
+    val port: Int = 27017,
+    val user: String = "username",
+    val password: String = "password"
+)
