@@ -2,6 +2,7 @@ package permission.data.mongodb.player
 
 
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import org.bson.Document
 import permission.data.mongodb.MongoDB
 import permission.data.playerdata.IPermissionPlayerData
@@ -26,23 +27,19 @@ internal class PermissionPlayerMongoDB(private val mongoDB: MongoDB) : IPermissi
     }
 
     override fun updatePermissionPlayerData(permissionPlayer: PermissionPlayer) {
-        permissionPlayer.run {
-            mongoDB.updateDocumentAsync(
-                PERMISSION_PLAYER_COLLECTION,
-                uuid.toString(),
-                Document(PERMISSION_PLAYER_DATA, encodeToString())
-            )
-        }
+        mongoDB.updateDocumentAsync(
+            PERMISSION_PLAYER_COLLECTION,
+            permissionPlayer.uuid.toString(),
+            Document(PERMISSION_PLAYER_DATA, json.encodeToString(permissionPlayer))
+        )
     }
 
     override fun setPermissionPlayerData(permissionPlayer: PermissionPlayer) {
-        permissionPlayer.run {
-            mongoDB.insertDocumentAsync(
-                PERMISSION_PLAYER_COLLECTION,
-                uuid.toString(),
-                Document(PERMISSION_PLAYER_DATA, encodeToString())
-            )
-        }
+        mongoDB.insertDocumentAsync(
+            PERMISSION_PLAYER_COLLECTION,
+            permissionPlayer.uuid.toString(),
+            Document(PERMISSION_PLAYER_DATA, json.encodeToString(permissionPlayer))
+        )
     }
 
     companion object {
