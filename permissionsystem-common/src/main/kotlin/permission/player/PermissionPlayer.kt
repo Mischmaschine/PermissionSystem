@@ -64,9 +64,6 @@ class PermissionPlayer(
                 permissionGroups.add(permissionGroup)
             }
         }
-
-        println(permissionGroups)
-
         return permissionGroups
     }
 
