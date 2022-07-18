@@ -1,6 +1,9 @@
 package permission.data
 
-@kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializable
+import permission.serialization.DefaultJsonConfiguration
+
+@Serializable
 internal data class DatabaseConfiguration(
     val databaseType: String,
     val databaseName: String,
@@ -8,4 +11,4 @@ internal data class DatabaseConfiguration(
     val port: Int,
     val user: String,
     val password: String
-)
+) : DefaultJsonConfiguration

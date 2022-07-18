@@ -1,10 +1,9 @@
 package permission.player
 
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import permission.Permission
+import permission.serialization.DefaultJsonConfiguration
 
-internal interface PermissionEntity {
+internal interface PermissionEntity : DefaultJsonConfiguration {
 
     /**
      * Returns all permissions of this entity.
@@ -15,7 +14,7 @@ internal interface PermissionEntity {
      * Returns the permission from the given name.
      */
     fun getPermissionByName(name: String): Permission? =
-        getAllNotExpiredPermissions().find { it.permissionName == name }
+        getAllNotExpiredPermissions().find { it.name == name }
 
     /**
      * Returns all permissions of this entity which are not expired.
@@ -57,21 +56,10 @@ internal interface PermissionEntity {
     /**
      * Returns true if the entity has the * permission.
      */
-    fun hasAllPermissions(): Boolean = getPermissions().any { it.permissionName == "*" }
+    fun hasAllPermissions(): Boolean = getPermissions().any { it.name == "*" }
 
     /**
      * Clears all permissions from this entity.
      */
     fun clearPermissions() = getPermissions().clear()
-
-    /**
-     * Returns the class instance as a string.
-     */
-    fun encodeToString(): String = json.encodeToString(this)
-
-    val json: Json
-        get() = Json {
-            prettyPrint = true
-            encodeDefaults = true
-        }
 }

@@ -7,6 +7,8 @@ import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
 import permission.extensions.update
 import java.util.concurrent.CompletableFuture
+import java.util.logging.Level
+import java.util.logging.Logger
 
 class PermissionCheckListener : Listener {
 
@@ -21,6 +23,6 @@ class PermissionCheckListener : Listener {
                         it.update()
                     }
             }
-        } ?: println("Permission player from ${player.name} not found")
+        } ?: Logger.getGlobal().log(Level.WARNING, "Permission player from ${player.name} not found")
     }
 }

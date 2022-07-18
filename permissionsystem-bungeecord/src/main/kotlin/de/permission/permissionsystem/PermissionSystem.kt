@@ -13,6 +13,7 @@ class PermissionSystem : Plugin() {
     override fun onEnable() {
         val permissionInitializer = PermissionInitializer(this.dataFolder.absolutePath)
         val bungeeCommandManager = BungeeCommandManagerSurrogate(this)
+        @Suppress("DEPRECATION")
         bungeeCommandManager.enableUnstableAPI("help")
         EventRegistrationService(
             this,
@@ -20,6 +21,7 @@ class PermissionSystem : Plugin() {
             permissionInitializer.permissionGroupManager,
             bungeeCommandManager
         )
+        this.logger.info("PermissionSystem has been enabled")
         proxy.registerChannel("player:permsUpdate")
 
 

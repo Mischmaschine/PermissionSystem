@@ -7,7 +7,6 @@ import de.mischmaschine.database.sql.local.sqlite.AbstractSQLite
 import de.mischmaschine.database.sql.network.mariadb.AbstractMariaDB
 import de.mischmaschine.database.sql.network.mysql.AbstractMySQL
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import permission.data.DatabaseConfiguration
 import permission.data.mongodb.MongoDB
@@ -34,13 +33,13 @@ class PermissionInitializer(absolutePath: String) {
             "username",
             "password"
         )
-        val format = Json { prettyPrint = true }
         val child =
             File(File(absolutePath).also { it.mkdirs() }, "databaseCredentials.json").also { it.createNewFile() }
         val childText = child.readText()
         if (childText.isEmpty()) {
-            child.writeText(format.encodeToString(databaseConfiguration))
+            child.writeText(databaseConfiguration.encodeToString())
         } else {
+            val format = Json { prettyPrint = true }
             databaseConfiguration = format.decodeFromString(childText)
         }
         Configuration(

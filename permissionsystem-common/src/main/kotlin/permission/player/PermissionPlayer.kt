@@ -75,7 +75,7 @@ class PermissionPlayer(
     }
 
     override fun hasPermission(permission: String): Boolean {
-        val permissionName = getAllNotExpiredPermissions().find { it.permissionName == permission }
+        val permissionName = getAllNotExpiredPermissions().find { it.name == permission }
         permissionName?.let { return true }
 
         val permissionBool = getAllNotExpiredPermissionGroups().any { it.hasPermission(permission) }

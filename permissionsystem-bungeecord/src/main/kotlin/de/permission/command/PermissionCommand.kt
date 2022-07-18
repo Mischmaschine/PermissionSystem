@@ -55,70 +55,118 @@ class PermissionCommand(
     fun onUser(
         commandSender: CommandSender,
         playerName: String,
-        addition: String,
-        action: String,
-        typeName: String,
+        @Optional
+        addition: String?,
+        @Optional
+        action: String?,
+        @Optional
+        typeName: String?,
         @Optional
         timeout: Long?
     ) {
-        val player = permissionSystem.proxy.getPlayer(playerName)
-        when (addition.lowercase()) {
-            "permission" -> {
-                when (action.lowercase()) {
-                    "add" -> {
-                        player.getPermissionPlayer().onSuccess {
-                            timeout?.let { long ->
-                                val permission = Permission(typeName, long)
-                                it.addPermission(permission)
-                                permissionSystem.publishData(player, it.encodeToString())
-                                it.update()
-                                commandSender.sendMessage(TextComponent("§aPermission added"))
-                            } ?: commandSender.sendMessage(TextComponent("§cPlease provide a timeout!"))
-                        }.onFailure {
-                            commandSender.sendMessage(TextComponent("§cPlayer not found"))
+        val player = permissionSystem.proxy.getPlayer(playerName) ?: run {
+            commandSender.sendMessage(TextComponent("§cPlayer not found"))
+            return
+        }
+        addition?.let { addition ->
+            when (addition.lowercase()) {
+                "permission" -> {
+                    action?.let { action ->
+                        when (action.lowercase()) {
+                            "add" -> {
+                                timeout?.let { long ->
+                                    typeName?.let { typeName ->
+                                        player.getPermissionPlayer().onSuccess {
+                                            val permission = Permission(typeName, long)
+                                            it.addPermission(permission)
+                                            permissionSystem.publishData(player, it.encodeToString())
+                                            it.update()
+                                            commandSender.sendMessage(TextComponent("§aPermission added"))
+
+                                        }.onFailure {
+                                            commandSender.sendMessage(TextComponent("§cPlayer not found"))
+                                        }
+                                    }
+                                } ?: commandSender.sendMessage(TextComponent("§cPlease provide a timeout!"))
+
+                            }
+
+                            "remove" -> {
+                                typeName?.let { typeName ->
+                                    player.getPermissionPlayer().onSuccess {
+                                        it.removePermission(typeName)
+                                        permissionSystem.publishData(player, it.encodeToString())
+                                        it.update()
+                                        commandSender.sendMessage(TextComponent("§aPermission removed"))
+                                    }.onFailure {
+                                        commandSender.sendMessage(TextComponent("§cPlayer not found"))
+                                    }
+                                }
+                            }
+
+                            else -> {
+                                commandSender.sendMessage(TextComponent("§cPlease provide a valid action!"))
+                            }
+                        }
+                    }
+                }
+
+                "group" -> {
+                    action?.let { action ->
+                        when (action.lowercase()) {
+                            "add" -> {
+                                typeName?.let { typeName ->
+                                    timeout?.let { long ->
+                                        player.getPermissionPlayer().onSuccess {
+                                            val infoGroup = PermissionInfoGroup(typeName, long)
+                                            it.addPermissionInfoGroup(infoGroup)
+                                            permissionSystem.publishData(player, it.encodeToString())
+                                            it.update()
+                                            commandSender.sendMessage(TextComponent("§aGroup added"))
+
+                                        }.onFailure {
+                                            commandSender.sendMessage(TextComponent("§cPlayer not found"))
+                                        }
+                                    }
+                                }
+                            }
+
+                            "remove" -> {
+                                typeName?.let { typeName ->
+                                    player.getPermissionPlayer().onSuccess {
+                                        it.removePermissionInfoGroup(typeName)
+                                        permissionSystem.publishData(player, it.encodeToString())
+                                        it.update()
+                                        commandSender.sendMessage(TextComponent("§aGroup removed"))
+                                    }.onFailure {
+                                        commandSender.sendMessage(TextComponent("§cPlayer not found"))
+                                    }
+                                }
+                            }
+
+                            else -> {
+                                commandSender.sendMessage(TextComponent("§cPlease provide a valid action!"))
+                            }
                         }
                     }
 
-                    "remove" -> {
-                        player.getPermissionPlayer().onSuccess {
-                            it.removePermission(typeName)
-                            permissionSystem.publishData(player, it.encodeToString())
-                            it.update()
-                            commandSender.sendMessage(TextComponent("§aPermission removed"))
-                        }.onFailure {
-                            commandSender.sendMessage(TextComponent("§cPlayer not found"))
-                        }
-                    }
+                }
+
+                else -> {
+                    commandSender.sendMessage(TextComponent("§cUnknown addition"))
                 }
             }
-
-            "group" -> {
-                when (action.lowercase()) {
-                    "add" -> {
-                        player.getPermissionPlayer().onSuccess {
-                            timeout?.let { long ->
-                                val infoGroup = PermissionInfoGroup(typeName, long)
-                                it.addPermissionInfoGroup(infoGroup)
-                                permissionSystem.publishData(player, it.encodeToString())
-                                it.update()
-                                commandSender.sendMessage(TextComponent("§aGroup added"))
-                            }
-                        }.onFailure {
-                            commandSender.sendMessage(TextComponent("§cPlayer not found"))
-                        }
-                    }
-
-                    "remove" -> {
-                        player.getPermissionPlayer().onSuccess {
-                            it.removePermissionInfoGroup(typeName)
-                            permissionSystem.publishData(player, it.encodeToString())
-                            it.update()
-                            commandSender.sendMessage(TextComponent("§aGroup removed"))
-                        }.onFailure {
-                            commandSender.sendMessage(TextComponent("§cPlayer not found"))
-                        }
-                    }
-                }
+        } ?: run {
+            player.getPermissionPlayer().onSuccess {
+                commandSender.sendMessage(
+                    TextComponent(
+                        "§a${
+                            it.getAllNotExpiredPermissions().map { permission -> permission.name }
+                        }"
+                    )
+                )
+            }.onFailure {
+                commandSender.sendMessage(TextComponent("§cPlayer not found"))
             }
         }
     }
