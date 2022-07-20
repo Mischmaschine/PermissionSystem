@@ -5,6 +5,10 @@ import java.util.concurrent.CompletionStage
 
 class FutureAction<T>(future: CompletionStage<T>) : CompletableFuture<T>() {
 
+    constructor(future: CompletableFuture<T>.() -> Unit) : this() {
+        apply(future)
+    }
+
     /**
      * Creates an uncompleted empty future.
      */
