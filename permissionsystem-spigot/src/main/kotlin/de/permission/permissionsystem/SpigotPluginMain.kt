@@ -19,7 +19,7 @@ class SpigotPluginMain : JavaPlugin(), PluginMessageListener {
     lateinit var permissionPlayerManager: PermissionPlayerManager
     override fun onEnable() {
         val permissionInitializer =
-            PermissionInitializer(this.dataFolder.absolutePath, LoggerFactory.getLogger("Permission"))
+            PermissionInitializer(this.dataFolder, LoggerFactory.getLogger("Permission"))
         this.permissionPlayerManager = permissionInitializer.permissionPlayerManager
         EventRegistrationService(this, permissionInitializer.permissionPlayerManager)
         server.messenger.registerIncomingPluginChannel(this, "player:permsUpdate", this)

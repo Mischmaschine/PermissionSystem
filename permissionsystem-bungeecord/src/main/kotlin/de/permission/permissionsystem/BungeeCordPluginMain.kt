@@ -18,7 +18,7 @@ class BungeeCordPluginMain : Plugin() {
 
     override fun onEnable() {
         val permissionInitializer =
-            PermissionInitializer(this.dataFolder.absolutePath, LoggerFactory.getLogger("Permission"))
+            PermissionInitializer(this.dataFolder, LoggerFactory.getLogger("Permission"))
         val bungeeCommandManager = BungeeCommandManagerSurrogate(this)
         @Suppress("DEPRECATION")
         bungeeCommandManager.enableUnstableAPI("help")

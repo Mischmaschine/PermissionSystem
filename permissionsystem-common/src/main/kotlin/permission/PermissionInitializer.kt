@@ -21,7 +21,7 @@ import permission.group.manager.PermissionGroupManager
 import permission.player.manager.PermissionPlayerManager
 import java.io.File
 
-class PermissionInitializer(absolutePath: String, private val logger: Logger) {
+class PermissionInitializer(absoluteFile: File, private val logger: Logger) {
 
     val permissionPlayerManager: PermissionPlayerManager
     val permissionGroupManager: PermissionGroupManager
@@ -34,8 +34,7 @@ class PermissionInitializer(absolutePath: String, private val logger: Logger) {
 
         //Creates a new configuration file.
         var databaseConfiguration = DatabaseConfiguration()
-        val child =
-            File(File(absolutePath).also { it.mkdirs() }, "databaseCredentials.json").also { it.createNewFile() }
+        val child = File(absoluteFile.also { it.mkdirs() }, "databaseCredentials.json").also { it.createNewFile() }
         val childText = child.readText()
         val format = Json { prettyPrint = true }
         if (childText.isEmpty()) {
