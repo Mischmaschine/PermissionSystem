@@ -14,6 +14,7 @@ import de.permissionsystem.velocity.permission.PermissionProviderSurrogate
 import de.permissionsystem.velocity.permission.service.SubscriberRegistrationService
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.slf4j.Logger
 import permission.PermissionInitializer
 import permission.player.PermissionPlayer
 import java.nio.file.Path
@@ -22,6 +23,7 @@ import kotlin.io.path.absolutePathString
 @Plugin(id = "permissionsystem", name = "PermissionSystem", version = "1.0")
 class VelocityPluginMain @Inject constructor(
     val proxyServer: ProxyServer,
+    val logger: Logger,
     @DataDirectory private val dataDirectory: Path
 ) {
 
@@ -32,7 +34,7 @@ class VelocityPluginMain @Inject constructor(
     @Subscribe
     fun onProxyInitialize(event: ProxyInitializeEvent) {
         instance = this
-        this.permissionInitializer = PermissionInitializer(dataDirectory.absolutePathString())
+        this.permissionInitializer = PermissionInitializer(dataDirectory.absolutePathString(), logger)
         this.permissionProviderSurrogate = PermissionProviderSurrogate(permissionInitializer.permissionPlayerManager)
         val commandManager = VelocityCommandManagerSurrogate(proxyServer, this)
         SubscriberRegistrationService(

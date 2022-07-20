@@ -8,6 +8,7 @@ import kotlinx.serialization.json.Json
 import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.plugin.Plugin
+import org.slf4j.LoggerFactory
 import permission.PermissionInitializer
 import permission.player.PermissionPlayer
 
@@ -16,7 +17,8 @@ class BungeeCordPluginMain : Plugin() {
     val json = Json.Default
 
     override fun onEnable() {
-        val permissionInitializer = PermissionInitializer(this.dataFolder.absolutePath)
+        val permissionInitializer =
+            PermissionInitializer(this.dataFolder.absolutePath, LoggerFactory.getLogger("Permission"))
         val bungeeCommandManager = BungeeCommandManagerSurrogate(this)
         @Suppress("DEPRECATION")
         bungeeCommandManager.enableUnstableAPI("help")

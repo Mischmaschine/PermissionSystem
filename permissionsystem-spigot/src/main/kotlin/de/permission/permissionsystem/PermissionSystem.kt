@@ -7,19 +7,24 @@ import kotlinx.serialization.json.Json
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.messaging.PluginMessageListener
+import org.slf4j.LoggerFactory
 import permission.PermissionInitializer
 import permission.extensions.updateCache
 import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager
+import java.util.logging.Level
 
 class PermissionSystem : JavaPlugin(), PluginMessageListener {
 
     lateinit var permissionPlayerManager: PermissionPlayerManager
     override fun onEnable() {
-        val permissionInitializer = PermissionInitializer(this.dataFolder.absolutePath)
+        val permissionInitializer =
+            PermissionInitializer(this.dataFolder.absolutePath, LoggerFactory.getLogger("Permission"))
         this.permissionPlayerManager = permissionInitializer.permissionPlayerManager
         EventRegistrationService(this, permissionInitializer.permissionPlayerManager)
         server.messenger.registerIncomingPluginChannel(this, "player:permsUpdate", this)
+
+        this.logger.log(Level.WARNING, "This plugin is only usable in combination with a proxy e.g. BungeeCord.")
     }
 
     override fun onPluginMessageReceived(channel: String, player: Player, bytes: ByteArray) {

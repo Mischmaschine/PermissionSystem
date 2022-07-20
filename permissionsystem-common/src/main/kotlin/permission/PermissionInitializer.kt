@@ -9,6 +9,7 @@ import de.mischmaschine.database.sql.network.mysql.AbstractMySQL
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.slf4j.Logger
 import permission.data.DatabaseConfiguration
 import permission.data.mongodb.MongoDB
 import permission.data.mongodb.group.PermissionGroupDataMongoDB
@@ -20,12 +21,17 @@ import permission.group.manager.PermissionGroupManager
 import permission.player.manager.PermissionPlayerManager
 import java.io.File
 
-class PermissionInitializer(absolutePath: String) {
+class PermissionInitializer(absolutePath: String, private val logger: Logger) {
 
     val permissionPlayerManager: PermissionPlayerManager
     val permissionGroupManager: PermissionGroupManager
 
     init {
+        this.logger.warn(
+            "Please note that this is a beta version of PermissionSystem. It is not stable yet."
+        )
+        this.logger.warn("If you find any bugs, please report them to the github repository.")
+
         var databaseConfiguration = DatabaseConfiguration()
         val child =
             File(File(absolutePath).also { it.mkdirs() }, "databaseCredentials.json").also { it.createNewFile() }
