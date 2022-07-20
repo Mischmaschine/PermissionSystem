@@ -1,3 +1,3 @@
 name: PermissionSystem
 version: 1.0
-main: de.permission.permissionsystem.PermissionSystem
+main: de.permission.permissionsystem.BungeeCordPluginMain
