@@ -18,8 +18,7 @@ repositories {
 dependencies {
     compileOnly("com.velocitypowered:velocity-api:3.1.1")
     implementation(project(":permissionsystem-common"))
-    implementation("co.aikar:acf-velocity:0.5.0-SNAPSHOT")
-    implementation("net.kyori:adventure-text-minimessage:4.11.0")
+    implementation("co.aikar:acf-velocity:0.5.1-SNAPSHOT")
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 }
 
