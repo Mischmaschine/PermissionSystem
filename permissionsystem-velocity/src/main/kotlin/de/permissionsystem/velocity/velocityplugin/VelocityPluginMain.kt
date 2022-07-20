@@ -35,7 +35,7 @@ class VelocityPluginMain @Inject constructor(
     fun onProxyInitialize(event: ProxyInitializeEvent) {
         instance = this
         this.permissionInitializer = PermissionInitializer(dataDirectory.absolutePathString(), logger)
-        this.permissionProviderSurrogate = PermissionProviderSurrogate(permissionInitializer.permissionPlayerManager)
+        this.permissionProviderSurrogate = PermissionProviderSurrogate()
         val commandManager = VelocityCommandManagerSurrogate(proxyServer, this)
         SubscriberRegistrationService(
             this,
