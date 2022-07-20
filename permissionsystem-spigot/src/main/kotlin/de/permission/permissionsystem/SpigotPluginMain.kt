@@ -14,7 +14,7 @@ import permission.player.PermissionPlayer
 import permission.player.manager.PermissionPlayerManager
 import java.util.logging.Level
 
-class PermissionSystem : JavaPlugin(), PluginMessageListener {
+class SpigotPluginMain : JavaPlugin(), PluginMessageListener {
 
     lateinit var permissionPlayerManager: PermissionPlayerManager
     override fun onEnable() {
