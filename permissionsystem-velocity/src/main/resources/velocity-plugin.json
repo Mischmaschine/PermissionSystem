@@ -5,5 +5,5 @@
   "authors": [
     "Mischmaschine"
   ],
-  "main": "de.permissionsystem.velocity.VelocityPluginMain"
+  "main": "de.permissionsystem.velocity.velocityplugin.VelocityPluginMain"
 }
