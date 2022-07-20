@@ -13,17 +13,16 @@ import java.util.*
 internal class PermissionPlayerMongoDB(private val mongoDB: MongoDB) : IPermissionPlayerData {
 
     override fun getPermissionPlayerData(uuid: UUID): FutureAction<PermissionPlayer> {
-        val futureAction = FutureAction<PermissionPlayer>()
-
-        executors.submit {
-            val permissionPlayer: PermissionPlayer? =
-                mongoDB.getDocumentSync(PERMISSION_PLAYER_COLLECTION, uuid.toString())
-                    ?.let { json.decodeFromString(it.getString(PERMISSION_PLAYER_DATA)) }
-            permissionPlayer?.let {
-                futureAction.complete(it)
-            } ?: futureAction.completeExceptionally(NullPointerException("PermissionPlayer not found"))
+        return FutureAction {
+            executors.submit {
+                val permissionPlayer: PermissionPlayer? =
+                    mongoDB.getDocumentSync(PERMISSION_PLAYER_COLLECTION, uuid.toString())
+                        ?.let { json.decodeFromString(it.getString(PERMISSION_PLAYER_DATA)) }
+                permissionPlayer?.let {
+                    this.complete(it)
+                } ?: this.completeExceptionally(NullPointerException("PermissionPlayer not found"))
+            }
         }
-        return futureAction
     }
 
     override fun updatePermissionPlayerData(permissionPlayer: PermissionPlayer) {

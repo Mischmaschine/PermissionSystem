@@ -10,21 +10,18 @@ import permission.group.PermissionGroup
 class PermissionGroupDataMySQL(private val mySQL: MySQL) : IPermissionGroupData {
 
     override fun getPermissionGroupData(name: String): FutureAction<PermissionGroup> {
-        val futureAction = FutureAction<PermissionGroup>()
-        executors.submit {
-            val resultSet = mySQL.getResultSync(PERMISSION_GROUP_TABLE, "group", name).getResultSet()
-            val permissionGroup: PermissionGroup? = resultSet.let {
-                if (it.next()) {
-                    json.decodeFromString<PermissionGroup>(it.getString(PERMISSION_GROUP_DATA))
-                } else {
-                    null
+        return FutureAction {
+            executors.submit {
+                val resultSet = mySQL.getResultSync(PERMISSION_GROUP_TABLE, "group", name).getResultSet()
+                resultSet.let {
+                    if (it.next()) {
+                        it.getString(PERMISSION_GROUP_DATA)?.let { finalString ->
+                            this.complete(json.decodeFromString<PermissionGroup>(finalString))
+                        } ?: this.completeExceptionally(IllegalArgumentException("Permission group $name not found"))
+                    }
                 }
             }
-            permissionGroup?.let {
-                futureAction.complete(it)
-            } ?: futureAction.completeExceptionally(IllegalArgumentException("Permission group $name not found"))
         }
-        return futureAction
     }
 
     override fun updatePermissionGroupData(permissionGroup: PermissionGroup) {

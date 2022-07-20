@@ -12,21 +12,16 @@ import java.util.*
 internal class PermissionPlayerMySQL(private val mySQL: MySQL) : IPermissionPlayerData {
 
     override fun getPermissionPlayerData(uuid: UUID): FutureAction<PermissionPlayer> {
-        val future = FutureAction<PermissionPlayer>()
-
-        executors.submit {
-            val resultSet =
-                mySQL.getResultSync(PERMISSION_PLAYER_TABLE, "uuid", uuid.toString()).getResultSet()
-            val permissionPlayer: PermissionPlayer? = if (resultSet.next()) {
-                json.decodeFromString(resultSet.getString("data") ?: "")
-            } else {
-                null
+        return FutureAction {
+            executors.submit {
+                val resultSet = mySQL.getResultSync(PERMISSION_PLAYER_TABLE, "uuid", uuid.toString()).getResultSet()
+                if (resultSet.next()) {
+                    resultSet.getString("data")?.let {
+                        this.complete(json.decodeFromString(it))
+                    } ?: this.completeExceptionally(SQLException("No result found"))
+                }
             }
-            permissionPlayer?.let {
-                future.complete(it)
-            } ?: future.completeExceptionally(SQLException("No result found"))
         }
-        return future
     }
 
     override fun updatePermissionPlayerData(permissionPlayer: PermissionPlayer) {
