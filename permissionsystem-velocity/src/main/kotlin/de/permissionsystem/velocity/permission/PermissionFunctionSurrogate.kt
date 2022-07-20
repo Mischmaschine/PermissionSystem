@@ -10,7 +10,10 @@ class PermissionFunctionSurrogate(
     private val permissionPlayerManager: PermissionPlayerManager
 ) : PermissionFunction {
 
-    override fun getPermissionValue(permission: String): Tristate {
+    override fun getPermissionValue(permission: String?): Tristate {
+        if (permission == null) {
+            return Tristate.FALSE
+        }
         val permissionPlayer =
             permissionPlayerManager.getCachedPermissionPlayer(player.uniqueId) ?: return Tristate.FALSE
         return Tristate.fromBoolean(permissionPlayer.hasPermission(permission))
