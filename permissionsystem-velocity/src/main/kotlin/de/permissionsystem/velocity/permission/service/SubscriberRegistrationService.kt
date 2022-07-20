@@ -18,6 +18,7 @@ class SubscriberRegistrationService(
 ) {
 
     init {
+        @Suppress("DEPRECATION")
         velocityCommandManager.enableUnstableAPI("help")
         registerSubscriber(PlayerServerConnectedSubscriber(permissionPlayerManager))
         registerCommand(PermissionCommand(velocityPluginMain, permissionGroupManager))
