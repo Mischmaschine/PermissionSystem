@@ -33,7 +33,6 @@ class SpigotPluginMain : JavaPlugin(), PluginMessageListener {
         }
         ByteStreams.newDataInput(bytes).let {
             val permissionPlayerJson = it.readUTF()
-            println(permissionPlayerJson)
             val permissionPlayer = Json.decodeFromString<PermissionPlayer>(permissionPlayerJson)
             permissionPlayer.updateCache()
         }

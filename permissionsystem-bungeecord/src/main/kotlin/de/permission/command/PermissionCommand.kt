@@ -72,32 +72,19 @@ class PermissionCommand(
             commandSender.sendMessage(TextComponent("§cPlayer not found"))
             return
         }
-        println(playerName)
-        println(addition)
-        println(action)
-        println(typeName)
-        println(timeout)
         addition?.let { addition ->
             when (addition.lowercase()) {
                 "permission" -> {
                     action?.let { action ->
                         when (action.lowercase()) {
                             "add" -> {
-                                println("add123")
                                 timeout?.let { long ->
-                                    println("timeout1234")
                                     typeName?.let { typeName ->
-                                        println("typeNameaqe23423")
                                         player.getPermissionPlayer().onSuccess {
-                                            println("success")
                                             val permission = Permission(typeName, long)
-                                            println("success132")
                                             it.addPermission(permission)
-                                            println("succes345345üüüüüüüüüüüs")
                                             BungeeCordPluginMain.publishData(player, it)
-                                            println("successpubluishads")
                                             it.update()
-                                            println("updated")
                                             commandSender.sendMessage(TextComponent("§aPermission added"))
 
                                         }.onFailure {

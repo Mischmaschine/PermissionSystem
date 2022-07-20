@@ -10,7 +10,6 @@ class PlayerSwitchListener(private val BungeeCordPluginMain: BungeeCordPluginMai
 
     @EventHandler
     fun onSwitch(event: ServerSwitchEvent) {
-        println(event.player.server.info.name)
         val player = event.player
         player.getCachedPermissionPlayer()?.let {
             BungeeCordPluginMain.publishData(player, it)
