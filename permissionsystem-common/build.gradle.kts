@@ -24,6 +24,7 @@ dependencies {
     implementation("org.mongodb:mongodb-driver-sync:4.6.0")
     compileOnly("org.mariadb.jdbc:mariadb-java-client:3.0.5")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.slf4j:slf4j-api:2.0.0-alpha7")
 }
 
 tasks.getByName<Test>("test") {
