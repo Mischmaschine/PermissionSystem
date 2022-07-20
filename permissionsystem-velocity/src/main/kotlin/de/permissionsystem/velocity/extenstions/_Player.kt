@@ -8,3 +8,7 @@ import permission.player.PermissionPlayer
 fun Player.getPermissionPlayer(): FutureAction<PermissionPlayer> {
     return VelocityPluginMain.instance.permissionInitializer.permissionPlayerManager.getPermissionPlayer(this.uniqueId)
 }
+
+fun Player.getCachedPermissionPlayer(): PermissionPlayer? {
+    return VelocityPluginMain.instance.permissionInitializer.permissionPlayerManager.getCachedPermissionPlayer(this.uniqueId)
+}
