@@ -38,6 +38,9 @@ interface IPermissionGroupData {
             encodeDefaults = true
         }
 
+    /**
+     * Returns the [ExecutorService] used to execute asynchronous tasks.
+     */
     val executors: ExecutorService
         get() = Executors.newCachedThreadPool()
 }

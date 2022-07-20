@@ -9,6 +9,10 @@ class PermissionPlayerManager(private val permissionPlayerData: IPermissionPlaye
 
     private val permissionPlayers = mutableMapOf<UUID, PermissionPlayer>()
 
+    /**
+     * Gets a [PermissionPlayer] by [UUID]
+     * If the permissionPlayer is cached it will be returned, otherwise it will be loaded from the database and then returned
+     */
     fun getPermissionPlayer(uuid: UUID): FutureAction<PermissionPlayer> {
         return getCachedPermissionPlayer(uuid)?.let {
             FutureAction(it)
@@ -37,6 +41,9 @@ class PermissionPlayerManager(private val permissionPlayerData: IPermissionPlaye
         return permissionPlayers[uuid]
     }
 
+    /**
+     * This method returns a collection of all cached permission players.
+     */
     fun getAllCachedPermissionPlayers(): Collection<PermissionPlayer> {
         return permissionPlayers.values
     }

@@ -32,6 +32,7 @@ class PermissionInitializer(absolutePath: String, private val logger: Logger) {
         )
         this.logger.warn("If you find any bugs, please report them to the github repository.")
 
+        //Creates a new configuration file.
         var databaseConfiguration = DatabaseConfiguration()
         val child =
             File(File(absolutePath).also { it.mkdirs() }, "databaseCredentials.json").also { it.createNewFile() }
@@ -42,6 +43,7 @@ class PermissionInitializer(absolutePath: String, private val logger: Logger) {
         } else {
             databaseConfiguration = format.decodeFromString(childText)
         }
+        //Loads the database configuration from the file.
         Configuration(
             databaseConfiguration.host,
             databaseConfiguration.port,
@@ -58,6 +60,7 @@ class PermissionInitializer(absolutePath: String, private val logger: Logger) {
                 )
             }
         )
+        //Tries to create new instances of the database. If it fails, it will throw an exception.
         when (databaseConfiguration.databaseType.lowercase()) {
             "mysql" -> {
                 val mySQL = MySQL(databaseConfiguration.databaseName)
