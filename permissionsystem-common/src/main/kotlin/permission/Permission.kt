@@ -1,10 +1,11 @@
 package permission
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 
 @Serializable
-class Permission(
+class Permission @OptIn(ExperimentalSerializationApi::class) constructor(
     @JsonNames("permissionName")
     val name: String = "",
     val timeout: Long = 0
