@@ -29,8 +29,8 @@ class SubscriberRegistrationService(
         subscriber.forEach { eventManager.register(velocityPluginMain, it) }
     }
 
-    private fun registerCommand(vararg subscriber: BaseCommand) {
-        subscriber.forEach { velocityCommandManager.registerCommand(it) }
+    private fun registerCommand(vararg baseCommands: BaseCommand) {
+        baseCommands.forEach { velocityCommandManager.registerCommand(it) }
     }
 
 }
