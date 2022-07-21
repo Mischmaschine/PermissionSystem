@@ -1,5 +1,6 @@
 package de.permission.group
 
+import de.permission.Permission
 import de.permission.serialization.CollectionSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -10,7 +11,7 @@ data class PermissionGroup(
     private val name: String,
     @SerialName("permissions")
     @Serializable(with = CollectionSerializer::class)
-    private val permissions: MutableCollection<de.permission.Permission> = mutableSetOf(),
+    private val permissions: MutableCollection<Permission> = mutableSetOf(),
     @SerialName("inheritances")
     @Serializable(with = CollectionSerializer::class)
     private val inheritances: MutableCollection<PermissionGroup> = mutableSetOf(),
@@ -30,7 +31,7 @@ data class PermissionGroup(
         return inheritances
     }
 
-    override fun getPermissions(): MutableCollection<de.permission.Permission> {
+    override fun getPermissions(): MutableCollection<Permission> {
         val permissions = this.permissions
         getAllInheritances().forEach {
             permissions.addAll(it.getPermissions())
@@ -38,11 +39,11 @@ data class PermissionGroup(
         return permissions
     }
 
-    override fun addPermission(permission: de.permission.Permission) {
+    override fun addPermission(permission: Permission) {
         this.permissions.add(permission)
     }
 
-    override fun removePermission(permission: de.permission.Permission) {
+    override fun removePermission(permission: Permission) {
         this.permissions.remove(permission)
     }
 
