@@ -9,14 +9,13 @@ import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
+import de.permission.player.PermissionPlayer
 import de.permissionsystem.velocity.VelocityCommandManagerSurrogate
 import de.permissionsystem.velocity.permission.PermissionProviderSurrogate
 import de.permissionsystem.velocity.permission.service.SubscriberRegistrationService
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.slf4j.Logger
-import permission.PermissionInitializer
-import permission.player.PermissionPlayer
 import java.nio.file.Path
 
 @Plugin(id = "permissionsystem", name = "PermissionSystem", version = "1.0")
@@ -28,12 +27,12 @@ class VelocityPluginMain @Inject constructor(
 
     val json = Json.Default
     lateinit var permissionProviderSurrogate: PermissionProviderSurrogate
-    lateinit var permissionInitializer: PermissionInitializer
+    lateinit var permissionInitializer: de.permission.PermissionInitializer
 
     @Subscribe
     fun onProxyInitialize(event: ProxyInitializeEvent) {
         instance = this
-        this.permissionInitializer = PermissionInitializer(this.dataDirectory.toFile(), this.logger)
+        this.permissionInitializer = de.permission.PermissionInitializer(this.dataDirectory.toFile(), this.logger)
         this.permissionProviderSurrogate = PermissionProviderSurrogate()
         val commandManager = VelocityCommandManagerSurrogate(proxyServer, this)
         SubscriberRegistrationService(

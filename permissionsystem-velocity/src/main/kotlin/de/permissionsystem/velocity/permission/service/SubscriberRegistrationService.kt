@@ -3,11 +3,11 @@ package de.permissionsystem.velocity.permission.service
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.VelocityCommandManager
 import com.velocitypowered.api.event.EventManager
+import de.permission.group.manager.PermissionGroupManager
+import de.permission.player.manager.PermissionPlayerManager
 import de.permissionsystem.velocity.command.PermissionCommand
 import de.permissionsystem.velocity.subscriber.PlayerServerConnectedSubscriber
 import de.permissionsystem.velocity.velocityplugin.VelocityPluginMain
-import permission.group.manager.PermissionGroupManager
-import permission.player.manager.PermissionPlayerManager
 
 class SubscriberRegistrationService(
     private val velocityPluginMain: VelocityPluginMain,

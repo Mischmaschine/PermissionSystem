@@ -3,13 +3,13 @@ package de.permission.listener.event
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.BungeeCommandManager
 import de.permission.command.PermissionCommand
+import de.permission.group.manager.PermissionGroupManager
 import de.permission.listener.PermissionCheckListener
 import de.permission.listener.PlayerLoginListener
 import de.permission.listener.PlayerSwitchListener
 import de.permission.permissionsystem.BungeeCordPluginMain
+import de.permission.player.manager.PermissionPlayerManager
 import net.md_5.bungee.api.plugin.Listener
-import permission.group.manager.PermissionGroupManager
-import permission.player.manager.PermissionPlayerManager
 
 class EventRegistrationService(
     private val BungeeCordPluginMain: BungeeCordPluginMain,

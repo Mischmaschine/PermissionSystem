@@ -1,10 +1,10 @@
 package de.permission.extensions
 
+import de.permission.future.FutureAction
+import de.permission.player.PermissionPlayer
+import de.permission.player.manager.PermissionPlayerManager
 import net.md_5.bungee.api.connection.PendingConnection
 import net.md_5.bungee.api.connection.ProxiedPlayer
-import permission.future.FutureAction
-import permission.player.PermissionPlayer
-import permission.player.manager.PermissionPlayerManager
 
 fun ProxiedPlayer.getPermissionPlayer(): FutureAction<PermissionPlayer> {
     return PermissionPlayerManager.instance.getPermissionPlayer(this.uniqueId)

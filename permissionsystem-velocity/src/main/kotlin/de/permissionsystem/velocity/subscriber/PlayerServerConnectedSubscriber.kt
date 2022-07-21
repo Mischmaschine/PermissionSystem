@@ -2,9 +2,9 @@ package de.permissionsystem.velocity.subscriber
 
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.player.ServerConnectedEvent
-import permission.extensions.update
-import permission.player.PermissionPlayer
-import permission.player.manager.PermissionPlayerManager
+import de.permission.extensions.update
+import de.permission.player.PermissionPlayer
+import de.permission.player.manager.PermissionPlayerManager
 
 class PlayerServerConnectedSubscriber(private val permissionPlayerManager: PermissionPlayerManager) {
 

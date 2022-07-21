@@ -4,14 +4,13 @@ import co.aikar.commands.BaseCommand
 import co.aikar.commands.CommandHelp
 import co.aikar.commands.annotation.*
 import com.velocitypowered.api.command.CommandSource
+import de.permission.extensions.update
+import de.permission.group.PermissionGroup
+import de.permission.group.PermissionInfoGroup
+import de.permission.group.manager.PermissionGroupManager
 import de.permissionsystem.velocity.extenstions.getPermissionPlayer
 import de.permissionsystem.velocity.velocityplugin.VelocityPluginMain
 import net.kyori.adventure.text.Component
-import permission.Permission
-import permission.extensions.update
-import permission.group.PermissionGroup
-import permission.group.PermissionInfoGroup
-import permission.group.manager.PermissionGroupManager
 
 @CommandPermission("permission.command.*")
 @CommandAlias("perms|permission")
@@ -74,14 +73,14 @@ class PermissionCommand(
         }
         addition?.let { addition ->
             when (addition.lowercase()) {
-                "permission" -> {
+                "de/permission" -> {
                     action?.let { action ->
                         when (action.lowercase()) {
                             "add" -> {
                                 timeout?.let { long ->
                                     typeName?.let { typeName ->
                                         player.getPermissionPlayer().onSuccess {
-                                            val permission = Permission(typeName, long)
+                                            val permission = de.permission.Permission(typeName, long)
                                             it.addPermission(permission)
                                             velocityPluginMain.publishData(player, it)
                                             it.update()

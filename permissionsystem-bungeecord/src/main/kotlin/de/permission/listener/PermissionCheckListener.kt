@@ -1,11 +1,11 @@
 package de.permission.listener
 
 import de.permission.extensions.getCachedPermissionPlayer
+import de.permission.extensions.update
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.event.PermissionCheckEvent
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
-import permission.extensions.update
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Level
 import java.util.logging.Logger

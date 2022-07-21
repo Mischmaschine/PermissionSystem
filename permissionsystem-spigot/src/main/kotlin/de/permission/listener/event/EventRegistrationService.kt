@@ -2,9 +2,9 @@ package de.permission.listener.event
 
 import de.permission.listener.PlayerLoginListener
 import de.permission.permissionsystem.SpigotPluginMain
+import de.permission.player.manager.PermissionPlayerManager
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
-import permission.player.manager.PermissionPlayerManager
 
 class EventRegistrationService(
     private val spigotPluginMain: SpigotPluginMain,
