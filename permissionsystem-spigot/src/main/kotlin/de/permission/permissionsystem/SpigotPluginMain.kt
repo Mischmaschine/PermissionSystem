@@ -1,6 +1,7 @@
 package de.permission.permissionsystem
 
 import com.google.common.io.ByteStreams
+import de.permission.PermissionInitializer
 import de.permission.extensions.updateCache
 import de.permission.listener.event.EventRegistrationService
 import de.permission.player.PermissionPlayer
@@ -18,7 +19,7 @@ class SpigotPluginMain : JavaPlugin(), PluginMessageListener {
     lateinit var permissionPlayerManager: PermissionPlayerManager
     override fun onEnable() {
         val permissionInitializer =
-            de.permission.PermissionInitializer(this.dataFolder, LoggerFactory.getLogger("Permission"))
+            PermissionInitializer(this.dataFolder, LoggerFactory.getLogger("Permission"))
         this.permissionPlayerManager = permissionInitializer.permissionPlayerManager
         EventRegistrationService(this, permissionInitializer.permissionPlayerManager)
         server.messenger.registerIncomingPluginChannel(this, "player:permsUpdate", this)

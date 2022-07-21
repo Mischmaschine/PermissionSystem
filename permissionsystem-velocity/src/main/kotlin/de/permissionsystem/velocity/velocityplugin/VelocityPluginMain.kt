@@ -9,6 +9,7 @@ import com.velocitypowered.api.plugin.Plugin
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ProxyServer
+import de.permission.PermissionInitializer
 import de.permission.player.PermissionPlayer
 import de.permissionsystem.velocity.VelocityCommandManagerSurrogate
 import de.permissionsystem.velocity.permission.PermissionProviderSurrogate
@@ -27,12 +28,12 @@ class VelocityPluginMain @Inject constructor(
 
     val json = Json.Default
     lateinit var permissionProviderSurrogate: PermissionProviderSurrogate
-    lateinit var permissionInitializer: de.permission.PermissionInitializer
+    lateinit var permissionInitializer: PermissionInitializer
 
     @Subscribe
     fun onProxyInitialize(event: ProxyInitializeEvent) {
         instance = this
-        this.permissionInitializer = de.permission.PermissionInitializer(this.dataDirectory.toFile(), this.logger)
+        this.permissionInitializer = PermissionInitializer(this.dataDirectory.toFile(), this.logger)
         this.permissionProviderSurrogate = PermissionProviderSurrogate()
         val commandManager = VelocityCommandManagerSurrogate(proxyServer, this)
         SubscriberRegistrationService(

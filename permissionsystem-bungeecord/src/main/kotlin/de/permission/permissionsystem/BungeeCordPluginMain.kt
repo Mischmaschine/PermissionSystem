@@ -2,6 +2,7 @@ package de.permission.permissionsystem
 
 import com.google.common.io.ByteStreams
 import de.permission.BungeeCommandManagerSurrogate
+import de.permission.PermissionInitializer
 import de.permission.listener.event.EventRegistrationService
 import de.permission.player.PermissionPlayer
 import kotlinx.serialization.encodeToString
@@ -17,7 +18,7 @@ class BungeeCordPluginMain : Plugin() {
 
     override fun onEnable() {
         val permissionInitializer =
-            de.permission.PermissionInitializer(this.dataFolder, LoggerFactory.getLogger("Permission"))
+            PermissionInitializer(this.dataFolder, LoggerFactory.getLogger("Permission"))
         val bungeeCommandManager = BungeeCommandManagerSurrogate(this)
         @Suppress("DEPRECATION")
         bungeeCommandManager.enableUnstableAPI("help")
