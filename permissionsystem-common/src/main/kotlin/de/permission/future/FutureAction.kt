@@ -50,10 +50,15 @@ class FutureAction<T>(future: CompletionStage<T>) : CompletableFuture<T>() {
         return this
     }
 
-    fun onComplete(action: (T, Throwable) -> Unit): FutureAction<T> {
-        whenComplete { result, throwable ->
-            action(result, throwable)
+    /**
+     * Gets the result of the future. If the future is not completed yet, this method will block until the future is completed.
+     * @return The result of the future or null.
+     */
+    fun getBlockingOrNull(): T? {
+        return try {
+            this.get()
+        } catch (_: NullPointerException) {
+            null
         }
-        return this
     }
 }
