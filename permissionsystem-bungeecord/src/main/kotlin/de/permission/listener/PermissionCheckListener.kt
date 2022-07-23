@@ -15,13 +15,18 @@ class PermissionCheckListener : Listener {
     @EventHandler
     fun onPermissionCheck(event: PermissionCheckEvent) {
         val player = event.sender as ProxiedPlayer
-        player.getCachedPermissionPlayer()?.let {
-            event.setHasPermission(it.hasPermission(event.permission))
+        player.getCachedPermissionPlayer()?.let { permissionPlayer ->
+            event.setHasPermission(permissionPlayer.hasPermission(event.permission))
             CompletableFuture.runAsync {
-                it.getPermissions().filter { permission -> permission.isExpired() }
-                    .forEach(it::removePermission).also { _ ->
-                        it.update()
+                permissionPlayer.getPermissions().filter { permission -> permission.isExpired() }
+                    .forEach(permissionPlayer::removePermission).also { _ ->
+                        permissionPlayer.update()
                     }
+                permissionPlayer.getPermissionGroups().filter { group -> group.isExpired() }.forEach {
+                    permissionPlayer.removePermissionInfoGroup(it.groupName).also { _ ->
+                        permissionPlayer.update()
+                    }
+                }
             }
         } ?: Logger.getGlobal().log(Level.WARNING, "Permission player from ${player.name} not found")
     }
