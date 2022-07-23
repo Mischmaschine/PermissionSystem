@@ -4,13 +4,13 @@ import co.aikar.commands.BaseCommand
 import co.aikar.commands.CommandHelp
 import co.aikar.commands.annotation.*
 import de.permission.extensions.getPermissionPlayer
+import de.permission.extensions.sendMessage
 import de.permission.extensions.update
 import de.permission.group.PermissionGroup
 import de.permission.group.PermissionInfoGroup
 import de.permission.group.manager.PermissionGroupManager
 import de.permission.permissionsystem.BungeeCordPluginMain
 import net.md_5.bungee.api.CommandSender
-import net.md_5.bungee.api.chat.TextComponent
 
 @CommandPermission("permission.command.*")
 @CommandAlias("perms|permission")
@@ -20,7 +20,6 @@ class PermissionCommand(
 ) : BaseCommand() {
 
     @CommandAlias("help")
-    //@Default
     @HelpCommand
     @Description("Shows help for the permission command")
     fun onHelp(commandHelp: CommandHelp) {
@@ -32,10 +31,10 @@ class PermissionCommand(
     @Description("Create a new group")
     fun onGroupCreate(commandSender: CommandSender, groupName: String) {
         permissionGroupManager.getPermissionGroup(groupName).onSuccess {
-            commandSender.sendMessage(TextComponent("Group already exists"))
+            commandSender.sendMessage(listOf("Group already exists"))
         }.onFailure {
             permissionGroupManager.createPermissionGroup(PermissionGroup(groupName, priority = 0))
-            commandSender.sendMessage(TextComponent("Group created"))
+            commandSender.sendMessage(listOf("Group created"))
         }
     }
 
@@ -45,9 +44,9 @@ class PermissionCommand(
     fun onGroupDelete(commandSender: CommandSender, groupName: String) {
         permissionGroupManager.getPermissionGroup(groupName).onSuccess {
             permissionGroupManager.deletePermissionGroup(groupName)
-            commandSender.sendMessage(TextComponent("Group deleted"))
+            commandSender.sendMessage(listOf("Group deleted"))
         }.onFailure {
-            commandSender.sendMessage(TextComponent("Group does not exist"))
+            commandSender.sendMessage(listOf("Group does not exist"))
         }
     }
 
@@ -68,7 +67,7 @@ class PermissionCommand(
         timeout: Long?
     ) {
         val player = BungeeCordPluginMain.proxy.getPlayer(playerName) ?: run {
-            commandSender.sendMessage(TextComponent("§cPlayer not found"))
+            commandSender.sendMessage(listOf("§cPlayer not found"))
             return
         }
         addition?.let { addition ->
@@ -84,13 +83,13 @@ class PermissionCommand(
                                             it.addPermission(permission)
                                             BungeeCordPluginMain.publishData(player, it)
                                             it.update()
-                                            commandSender.sendMessage(TextComponent("§aPermission added"))
+                                            commandSender.sendMessage(listOf("§aPermission added"))
 
                                         }.onFailure {
-                                            commandSender.sendMessage(TextComponent("§cPlayer not found"))
+                                            commandSender.sendMessage(listOf("§cPlayer not found"))
                                         }
                                     }
-                                } ?: commandSender.sendMessage(TextComponent("§cPlease provide a timeout!"))
+                                } ?: commandSender.sendMessage(listOf("§cPlease provide a timeout!"))
 
                             }
 
@@ -100,15 +99,15 @@ class PermissionCommand(
                                         it.removePermission(typeName)
                                         BungeeCordPluginMain.publishData(player, it)
                                         it.update()
-                                        commandSender.sendMessage(TextComponent("§aPermission removed"))
+                                        commandSender.sendMessage(listOf("§aPermission removed"))
                                     }.onFailure {
-                                        commandSender.sendMessage(TextComponent("§cPlayer not found"))
+                                        commandSender.sendMessage(listOf("§cPlayer not found"))
                                     }
                                 }
                             }
 
                             else -> {
-                                commandSender.sendMessage(TextComponent("§cPlease provide a valid action!"))
+                                commandSender.sendMessage(listOf("§cPlease provide a valid action!"))
                             }
                         }
                     }
@@ -125,10 +124,10 @@ class PermissionCommand(
                                             it.addPermissionInfoGroup(infoGroup)
                                             BungeeCordPluginMain.publishData(player, it)
                                             it.update()
-                                            commandSender.sendMessage(TextComponent("§aGroup added"))
+                                            commandSender.sendMessage(listOf("§aGroup added"))
 
                                         }.onFailure {
-                                            commandSender.sendMessage(TextComponent("§cPlayer not found"))
+                                            commandSender.sendMessage(listOf("§cPlayer not found"))
                                         }
                                     }
                                 }
@@ -140,15 +139,15 @@ class PermissionCommand(
                                         it.removePermissionInfoGroup(typeName)
                                         BungeeCordPluginMain.publishData(player, it)
                                         it.update()
-                                        commandSender.sendMessage(TextComponent("§aGroup removed"))
+                                        commandSender.sendMessage(listOf("§aGroup removed"))
                                     }.onFailure {
-                                        commandSender.sendMessage(TextComponent("§cPlayer not found"))
+                                        commandSender.sendMessage(listOf("§cPlayer not found"))
                                     }
                                 }
                             }
 
                             else -> {
-                                commandSender.sendMessage(TextComponent("§cPlease provide a valid action!"))
+                                commandSender.sendMessage(listOf("§cPlease provide a valid action!"))
                             }
                         }
                     }
@@ -156,20 +155,20 @@ class PermissionCommand(
                 }
 
                 else -> {
-                    commandSender.sendMessage(TextComponent("§cUnknown addition"))
+                    commandSender.sendMessage(listOf("§cUnknown addition"))
                 }
             }
         } ?: run {
             player.getPermissionPlayer().onSuccess {
                 commandSender.sendMessage(
-                    TextComponent(
+                    listOf(
                         "§a${
                             it.getAllNotExpiredPermissions().map { permission -> permission.name }
                         }"
                     )
                 )
             }.onFailure {
-                commandSender.sendMessage(TextComponent("§cPlayer not found"))
+                commandSender.sendMessage(listOf("§cPlayer not found"))
             }
         }
     }
