@@ -1,18 +1,13 @@
 package de.permission.future
 
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CompletionStage
 
-class FutureAction<T>(future: CompletionStage<T>) : CompletableFuture<T>() {
-
-    constructor(future: CompletableFuture<T>.() -> Unit) : this() {
-        apply(future)
-    }
+class FutureAction<T>(future: CompletableFuture<T>.() -> Unit) : CompletableFuture<T>() {
 
     /**
      * Creates an uncompleted empty future.
      */
-    constructor() : this(CompletableFuture<T>())
+    constructor() : this({})
 
     /**
      * This constructor completes the future with the given value.
@@ -23,9 +18,7 @@ class FutureAction<T>(future: CompletionStage<T>) : CompletableFuture<T>() {
     }
 
     init {
-        future.whenComplete { result, throwable ->
-            throwable?.let { completeExceptionally(it) } ?: complete(result)
-        }
+        this.apply(future)
     }
 
     /**
