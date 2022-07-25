@@ -19,11 +19,11 @@ class PermissionCheckListener : Listener {
             event.setHasPermission(permissionPlayer.hasPermission(event.permission))
             CompletableFuture.runAsync {
                 permissionPlayer.getPermissions().filter { permission -> permission.isExpired() }
-                    .forEach(permissionPlayer::removePermission).also { _ ->
+                    .forEach(permissionPlayer::removePermission).also {
                         permissionPlayer.update()
                     }
                 permissionPlayer.getPermissionGroups().filter { group -> group.isExpired() }.forEach {
-                    permissionPlayer.removePermissionInfoGroup(it.groupName).also { _ ->
+                    permissionPlayer.removePermissionInfoGroup(it.groupName).also {
                         permissionPlayer.update()
                     }
                 }
