@@ -47,6 +47,12 @@ class PermissionPlayer(
         return getPermissionGroups().filter { !it.isExpired() }
     }
 
+    fun getHighestPermissionGroup(): PermissionGroup? {
+        val groups = getAllNotExpiredPermissionGroups()
+        if (groups.isEmpty()) return null
+        return groups.maxBy { it.getPriority() }
+    }
+
     fun getAllNotExpiredPermissionGroups(): Collection<PermissionGroup> {
         val permissionInfoGroups: List<FutureAction<PermissionGroup>> =
             getAllNotExpiredPermissionInfoGroups().map {
