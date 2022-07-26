@@ -246,7 +246,7 @@ class PermissionCommand(
                     listOf(
                         "Information about player §e${player.name}",
                         "Highest group:",
-                        "  §8§l➥ §6${it.getHighestPermissionGroup()}",
+                        "  §8§l➥ §6${it.getHighestPermissionGroup()?.getName() ?: "§c✘"}",
                         "Permissions:",
                     ),
                     it.getAllNotExpiredPermissions().map { permission -> "  §8§l➥ §e${permission.name}" }
