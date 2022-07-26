@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonNames
 class Permission @OptIn(ExperimentalSerializationApi::class) constructor(
     @JsonNames("permissionName")
     val name: String = "",
-    val timeout: Long = 0
+    val timeout: Long = -1
 ) {
 
     /**
