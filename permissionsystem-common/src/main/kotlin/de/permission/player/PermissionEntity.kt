@@ -19,7 +19,14 @@ internal interface PermissionEntity {
      * Returns all permissions of this entity which are not expired.
      */
     fun getAllNotExpiredPermissions(): Collection<Permission> =
-        getPermissions().filter { !it.also { if (it.isExpired()) removePermission(it) }.isExpired() }
+        getPermissions().filter {
+            it.isExpired().let { boolean ->
+                if (boolean) {
+                    removePermission(it)
+                }
+                boolean
+            }
+        }
 
     /**
      * Sets the permission to the given value.
