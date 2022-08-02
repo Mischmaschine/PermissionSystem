@@ -58,7 +58,7 @@ class PermissionCommand(
                                 typeName?.let {
                                     permissionGroupManager.getPermissionGroup(groupName).onSuccess { group ->
                                         permissionGroupManager.getPermissionGroup(typeName).onSuccess {
-                                            group.addInheritance(group)
+                                            group.addInheritance(it)
                                             group.update()
                                             commandSender.sendMessage(listOf("Group updated"))
                                         }.onFailure {
