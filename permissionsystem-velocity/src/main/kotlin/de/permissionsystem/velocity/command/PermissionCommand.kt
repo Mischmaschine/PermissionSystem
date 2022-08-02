@@ -73,7 +73,7 @@ class PermissionCommand(
         }
         addition?.let { addition ->
             when (addition.lowercase()) {
-                "de/permission" -> {
+                "permission" -> {
                     action?.let { action ->
                         when (action.lowercase()) {
                             "add" -> {
